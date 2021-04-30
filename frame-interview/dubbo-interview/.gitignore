@@ -1,0 +1,16 @@
+/target
+/.idea
+/.settings
+/.myeclipse
+/out
+/log
+
+*.iml
+*.class
+*.jar
+*.war
+*.classpath
+
+.Ds_Store
+.classpath
+.project

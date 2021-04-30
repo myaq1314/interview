@@ -18,6 +18,7 @@
         <module>design-mode-interview</module>
         <module>exception-interview</module>
         <module>io-interview</module>
+        <module>json-interview</module>
         <module>jvm-interview</module>
         <module>lock-interview</module>
         <module>nio-interview</module>
