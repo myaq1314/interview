@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.czh.interview.spring_boot_interview.SpringBootInterviewTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.176 s - in org.czh.interview.spring_boot_interview.SpringBootInterviewTest

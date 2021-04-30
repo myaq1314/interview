@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: org.czh.interview.active_mq_interview.ActiveMqInterviewTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.173 s - in org.czh.interview.active_mq_interview.ActiveMqInterviewTest
