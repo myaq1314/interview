@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Documented
 @Target(PARAMETER)
 @Retention(SOURCE)
-public @interface Min {
+public @interface MaxTag {
 
     int value();
 

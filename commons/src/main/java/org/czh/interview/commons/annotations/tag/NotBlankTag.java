@@ -16,8 +16,5 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Documented
 @Target(PARAMETER)
 @Retention(SOURCE)
-public @interface Pattern {
-
-    String regexp();
-
+public @interface NotBlankTag {
 }

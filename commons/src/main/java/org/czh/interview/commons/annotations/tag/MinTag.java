@@ -16,5 +16,8 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Documented
 @Target(PARAMETER)
 @Retention(SOURCE)
-public @interface NotEmpty {
+public @interface MinTag {
+
+    int value();
+
 }
