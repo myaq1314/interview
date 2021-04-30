@@ -1,6 +1,6 @@
 package org.czh.interview.commons.convertor;
 
-import org.czh.interview.commons.annotations.tag.NotNull;
+import org.czh.interview.commons.annotations.tag.NotNullTag;
 import org.czh.interview.commons.enums.parent.IBaseEnum;
 import org.czh.interview.commons.validate.EmptyAssert;
 import org.czh.interview.commons.validate.EmptyValidate;
@@ -26,7 +26,7 @@ import java.util.function.Predicate;
 public final class EnumConvertor {
 
     /*
-      -----------------------------enum convert to new array-------------------------------
+      -----------------------------enum convert to first-------------------------------
      */
 
     /**
@@ -37,7 +37,7 @@ public final class EnumConvertor {
      * @param <S>         枚举类型
      * @return 第一个值
      */
-    public static <S> S convertToFirst(@NotNull final Class<S> sourceClazz,
+    public static <S> S convertToFirst(@NotNullTag final Class<S> sourceClazz,
                                        final Predicate<S> filter) {
         return convertToFirst(sourceClazz, filter, s -> s);
     }
@@ -52,9 +52,9 @@ public final class EnumConvertor {
      * @param <T>         目标元素类型
      * @return 第一个值
      */
-    public static <S, T> T convertToFirst(@NotNull final Class<S> sourceClazz,
+    public static <S, T> T convertToFirst(@NotNullTag final Class<S> sourceClazz,
                                           final Predicate<S> filter,
-                                          @NotNull final Function<S, T> convertor) {
+                                          @NotNullTag final Function<S, T> convertor) {
         EnumAssert.isEnum(sourceClazz);
         EmptyAssert.isNotNull(convertor);
 
@@ -72,7 +72,7 @@ public final class EnumConvertor {
      * @param <S>         枚举类型
      * @return 数组
      */
-    public static <S extends IBaseEnum> S[] convertToArray(@NotNull final Class<S> sourceClazz) {
+    public static <S extends IBaseEnum> S[] convertToArray(@NotNullTag final Class<S> sourceClazz) {
         return convertToArray(sourceClazz, sourceClazz, s -> s);
     }
 
@@ -86,9 +86,9 @@ public final class EnumConvertor {
      * @param <T>         目标数组元素类型
      * @return 数组
      */
-    public static <S extends IBaseEnum, T> T[] convertToArray(@NotNull final Class<S> sourceClazz,
-                                                              @NotNull final Class<T> targetClazz,
-                                                              @NotNull final Function<S, T> convertor) {
+    public static <S extends IBaseEnum, T> T[] convertToArray(@NotNullTag final Class<S> sourceClazz,
+                                                              @NotNullTag final Class<T> targetClazz,
+                                                              @NotNullTag final Function<S, T> convertor) {
         return convertToArray(sourceClazz, targetClazz, convertor, null);
     }
 
@@ -103,9 +103,9 @@ public final class EnumConvertor {
      * @param <T>         目标数组元素类型
      * @return 数组
      */
-    public static <S extends IBaseEnum, T> T[] convertToArray(@NotNull final Class<S> sourceClazz,
-                                                              @NotNull final Class<T> targetClazz,
-                                                              @NotNull final Function<S, T> convertor,
+    public static <S extends IBaseEnum, T> T[] convertToArray(@NotNullTag final Class<S> sourceClazz,
+                                                              @NotNullTag final Class<T> targetClazz,
+                                                              @NotNullTag final Function<S, T> convertor,
                                                               final Predicate<S> filter) {
         // 定长时，使用 数组 转 数组
         if (EmptyValidate.isNull(filter)) {
@@ -130,7 +130,7 @@ public final class EnumConvertor {
      * @param <S>         枚举类型
      * @return List集合
      */
-    public static <S extends IBaseEnum> List<S> convertToList(@NotNull final Class<S> sourceClazz) {
+    public static <S extends IBaseEnum> List<S> convertToList(@NotNullTag final Class<S> sourceClazz) {
         return convertToList(sourceClazz, s -> s);
     }
 
@@ -143,8 +143,8 @@ public final class EnumConvertor {
      * @param <T>         目标List集合元素类型
      * @return List集合
      */
-    public static <S extends IBaseEnum, T> List<T> convertToList(@NotNull final Class<S> sourceClazz,
-                                                                 @NotNull final Function<S, T> convertor) {
+    public static <S extends IBaseEnum, T> List<T> convertToList(@NotNullTag final Class<S> sourceClazz,
+                                                                 @NotNullTag final Function<S, T> convertor) {
         return convertToList(sourceClazz, convertor, null);
     }
 
@@ -158,8 +158,8 @@ public final class EnumConvertor {
      * @param <T>         目标List集合元素类型
      * @return List集合
      */
-    public static <S extends IBaseEnum, T> List<T> convertToList(@NotNull final Class<S> sourceClazz,
-                                                                 @NotNull final Function<S, T> convertor,
+    public static <S extends IBaseEnum, T> List<T> convertToList(@NotNullTag final Class<S> sourceClazz,
+                                                                 @NotNullTag final Function<S, T> convertor,
                                                                  final Predicate<S> filter) {
         List<T> target = new ArrayList<>();
         convertToCollection(sourceClazz, target, convertor, filter);
@@ -177,7 +177,7 @@ public final class EnumConvertor {
      * @param <S>         枚举类型
      * @return Set集合
      */
-    public static <S extends IBaseEnum> Set<S> convertToSet(@NotNull final Class<S> sourceClazz) {
+    public static <S extends IBaseEnum> Set<S> convertToSet(@NotNullTag final Class<S> sourceClazz) {
         return convertToSet(sourceClazz, s -> s);
     }
 
@@ -190,8 +190,8 @@ public final class EnumConvertor {
      * @param <T>         目标Set集合元素类型
      * @return Set集合
      */
-    public static <S extends IBaseEnum, T> Set<T> convertToSet(@NotNull final Class<S> sourceClazz,
-                                                               @NotNull final Function<S, T> convertor) {
+    public static <S extends IBaseEnum, T> Set<T> convertToSet(@NotNullTag final Class<S> sourceClazz,
+                                                               @NotNullTag final Function<S, T> convertor) {
         return convertToSet(sourceClazz, convertor, null);
     }
 
@@ -205,8 +205,8 @@ public final class EnumConvertor {
      * @param <T>         目标Set集合元素类型
      * @return Set集合
      */
-    public static <S extends IBaseEnum, T> Set<T> convertToSet(@NotNull final Class<S> sourceClazz,
-                                                               @NotNull final Function<S, T> convertor,
+    public static <S extends IBaseEnum, T> Set<T> convertToSet(@NotNullTag final Class<S> sourceClazz,
+                                                               @NotNullTag final Function<S, T> convertor,
                                                                final Predicate<S> filter) {
         Set<T> target = new HashSet<>();
         convertToCollection(sourceClazz, target, convertor, filter);
@@ -224,8 +224,8 @@ public final class EnumConvertor {
      * @param target      目标集合
      * @param <S>         枚举类型
      */
-    public static <S extends IBaseEnum> void convertToCollection(@NotNull final Class<S> sourceClazz,
-                                                                 @NotNull final Collection<S> target) {
+    public static <S extends IBaseEnum> void convertToCollection(@NotNullTag final Class<S> sourceClazz,
+                                                                 @NotNullTag final Collection<S> target) {
         convertToCollection(sourceClazz, target, s -> s);
     }
 
@@ -238,9 +238,9 @@ public final class EnumConvertor {
      * @param <S>         枚举类型
      * @param <T>         目标集合元素类型
      */
-    public static <S extends IBaseEnum, T> void convertToCollection(@NotNull final Class<S> sourceClazz,
-                                                                    @NotNull final Collection<T> target,
-                                                                    @NotNull final Function<S, T> convertor) {
+    public static <S extends IBaseEnum, T> void convertToCollection(@NotNullTag final Class<S> sourceClazz,
+                                                                    @NotNullTag final Collection<T> target,
+                                                                    @NotNullTag final Function<S, T> convertor) {
         convertToCollection(sourceClazz, target, convertor, null);
     }
 
@@ -254,9 +254,9 @@ public final class EnumConvertor {
      * @param <S>         枚举类型
      * @param <T>         目标集合元素类型
      */
-    public static <S extends IBaseEnum, T> void convertToCollection(@NotNull final Class<S> sourceClazz,
-                                                                    @NotNull final Collection<T> target,
-                                                                    @NotNull final Function<S, T> convertor,
+    public static <S extends IBaseEnum, T> void convertToCollection(@NotNullTag final Class<S> sourceClazz,
+                                                                    @NotNullTag final Collection<T> target,
+                                                                    @NotNullTag final Function<S, T> convertor,
                                                                     final Predicate<S> filter) {
         EnumAssert.isEnum(sourceClazz);
         EmptyAssert.allNotNull(target, convertor);
@@ -276,7 +276,7 @@ public final class EnumConvertor {
      * @param <S>         枚举类型
      * @return 键值对
      */
-    public static <S extends IBaseEnum> Map<S, S> convertToMap(@NotNull final Class<S> sourceClazz) {
+    public static <S extends IBaseEnum> Map<S, S> convertToMap(@NotNullTag final Class<S> sourceClazz) {
         return convertToMap(sourceClazz, s -> s);
     }
 
@@ -289,8 +289,8 @@ public final class EnumConvertor {
      * @param <K>         键值对key元素类型
      * @return 键值对
      */
-    public static <S extends IBaseEnum, K> Map<K, S> convertToMap(@NotNull final Class<S> sourceClazz,
-                                                                  @NotNull final Function<S, K> key) {
+    public static <S extends IBaseEnum, K> Map<K, S> convertToMap(@NotNullTag final Class<S> sourceClazz,
+                                                                  @NotNullTag final Function<S, K> key) {
         return convertToMap(sourceClazz, key, s -> s);
     }
 
@@ -305,9 +305,9 @@ public final class EnumConvertor {
      * @param <V>         键值对value元素类型
      * @return 键值对
      */
-    public static <S extends IBaseEnum, K, V> Map<K, V> convertToMap(@NotNull final Class<S> sourceClazz,
-                                                                     @NotNull final Function<S, K> key,
-                                                                     @NotNull final Function<S, V> value) {
+    public static <S extends IBaseEnum, K, V> Map<K, V> convertToMap(@NotNullTag final Class<S> sourceClazz,
+                                                                     @NotNullTag final Function<S, K> key,
+                                                                     @NotNullTag final Function<S, V> value) {
         return convertToMap(sourceClazz, key, value, null);
     }
 
@@ -323,9 +323,9 @@ public final class EnumConvertor {
      * @param <V>         键值对value元素类型
      * @return 键值对
      */
-    public static <S extends IBaseEnum, K, V> Map<K, V> convertToMap(@NotNull final Class<S> sourceClazz,
-                                                                     @NotNull final Function<S, K> key,
-                                                                     @NotNull final Function<S, V> value,
+    public static <S extends IBaseEnum, K, V> Map<K, V> convertToMap(@NotNullTag final Class<S> sourceClazz,
+                                                                     @NotNullTag final Function<S, K> key,
+                                                                     @NotNullTag final Function<S, V> value,
                                                                      final Predicate<S> filter) {
         Map<K, V> target = new HashMap<>();
         convertToMap(sourceClazz, target, key, value, filter);
@@ -343,8 +343,8 @@ public final class EnumConvertor {
      * @param target      目标键值对
      * @param <S>         枚举类型
      */
-    public static <S extends IBaseEnum> void convertToMap(@NotNull final Class<S> sourceClazz,
-                                                          @NotNull final Map<S, S> target) {
+    public static <S extends IBaseEnum> void convertToMap(@NotNullTag final Class<S> sourceClazz,
+                                                          @NotNullTag final Map<S, S> target) {
         convertToMap(sourceClazz, target, s -> s);
     }
 
@@ -357,9 +357,9 @@ public final class EnumConvertor {
      * @param <S>         枚举类型
      * @param <K>         键值对key元素类型
      */
-    public static <S extends IBaseEnum, K> void convertToMap(@NotNull final Class<S> sourceClazz,
-                                                             @NotNull final Map<K, S> target,
-                                                             @NotNull final Function<S, K> key) {
+    public static <S extends IBaseEnum, K> void convertToMap(@NotNullTag final Class<S> sourceClazz,
+                                                             @NotNullTag final Map<K, S> target,
+                                                             @NotNullTag final Function<S, K> key) {
         convertToMap(sourceClazz, target, key, s -> s);
     }
 
@@ -374,10 +374,10 @@ public final class EnumConvertor {
      * @param <K>         键值对key元素类型
      * @param <V>         键值对value元素类型
      */
-    public static <S extends IBaseEnum, K, V> void convertToMap(@NotNull final Class<S> sourceClazz,
-                                                                @NotNull final Map<K, V> target,
-                                                                @NotNull final Function<S, K> key,
-                                                                @NotNull final Function<S, V> value) {
+    public static <S extends IBaseEnum, K, V> void convertToMap(@NotNullTag final Class<S> sourceClazz,
+                                                                @NotNullTag final Map<K, V> target,
+                                                                @NotNullTag final Function<S, K> key,
+                                                                @NotNullTag final Function<S, V> value) {
         convertToMap(sourceClazz, target, key, value, null);
     }
 
@@ -393,10 +393,10 @@ public final class EnumConvertor {
      * @param <K>         键值对key元素类型
      * @param <V>         键值对value元素类型
      */
-    public static <S extends IBaseEnum, K, V> void convertToMap(@NotNull final Class<S> sourceClazz,
-                                                                @NotNull final Map<K, V> target,
-                                                                @NotNull final Function<S, K> key,
-                                                                @NotNull final Function<S, V> value,
+    public static <S extends IBaseEnum, K, V> void convertToMap(@NotNullTag final Class<S> sourceClazz,
+                                                                @NotNullTag final Map<K, V> target,
+                                                                @NotNullTag final Function<S, K> key,
+                                                                @NotNullTag final Function<S, V> value,
                                                                 final Predicate<S> filter) {
         EnumAssert.isEnum(sourceClazz);
         EmptyAssert.allNotNull(target, key, value);

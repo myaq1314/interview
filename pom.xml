@@ -30,9 +30,11 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-math3.version>3.6.1</commons-math3.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
         <jackson.version>2.12.3</jackson.version>
         <fastjson.version>1.2.76</fastjson.version>
         <json-lib.version>2.4</json-lib.version>
+        <swagger-annotations.version>1.6.2</swagger-annotations.version>
     </properties>
 
     <dependencyManagement>
@@ -67,6 +69,11 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${validation-api.version}</version>
             </dependency>
 
             <!--jackson start-->
@@ -103,6 +110,12 @@
                 <classifier>jdk15</classifier>
             </dependency>
             <!--json-lib end-->
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-annotations.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
