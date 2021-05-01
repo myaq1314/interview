@@ -1,9 +1,12 @@
 package org.czh.interview.commons.entity;
 
+import lombok.Getter;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.Objects;
 
 /**
  * @author : czh
@@ -15,21 +18,29 @@ import javax.validation.constraints.Pattern;
 public class GrandsonTest extends SonTest {
 
     @NotBlank
+    @Getter
     private String gPri;
     @NotEmpty
+    @Getter
     protected String gPro;
     @NotNull
+    @Getter
     String gDef;
     @Pattern(regexp = "yyyy-MM-dd")
+    @Getter
     public String gPub;
 
     @NotBlank
+    @Getter
     private static String gPriSta;
     @NotEmpty
+    @Getter
     protected static String gProSta;
     @NotNull
+    @Getter
     static String gDefSta;
     @Pattern(regexp = "yyyy-MM-dd")
+    @Getter
     public static String gPubSta;
 
     static {
@@ -50,6 +61,39 @@ public class GrandsonTest extends SonTest {
         GrandsonTest.gProSta = "gProStaVa";
         GrandsonTest.gDefSta = "gDefStaVa";
         GrandsonTest.gPubSta = "gPubStaVa";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GrandsonTest)) return false;
+        if (!super.equals(o)) return false;
+        GrandsonTest that = (GrandsonTest) o;
+        return Objects.equals(gPri, that.gPri)
+                && Objects.equals(gPro, that.gPro)
+                && Objects.equals(gDef, that.gDef)
+                && Objects.equals(gPub, that.gPub);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), gPri, gPro, gDef, gPub);
+    }
+
+    @Override
+    public String toString() {
+        return "GrandsonTest{" +
+                "gPri='" + gPri + '\'' +
+                ", gPro='" + gPro + '\'' +
+                ", gDef='" + gDef + '\'' +
+                ", gPub='" + gPub + '\'' +
+                ", pPro='" + pPro + '\'' +
+                ", pDef='" + pDef + '\'' +
+                ", pPub='" + pPub + '\'' +
+                ", sPro='" + sPro + '\'' +
+                ", sDef='" + sDef + '\'' +
+                ", sPub='" + sPub + '\'' +
+                '}';
     }
 
     private String getGPriMet() {

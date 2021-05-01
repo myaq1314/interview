@@ -1,7 +1,6 @@
 package org.czh.interview.commons.convertor;
 
-import lombok.Getter;
-import org.czh.interview.commons.enums.parent.IDictEnum;
+import org.czh.interview.commons.enums.ConvertorTestDict;
 import org.czh.interview.commons.validate.FlagAssert;
 import org.junit.Test;
 
@@ -25,18 +24,18 @@ public class EnumConvertorTest {
 
     @Test
     public void convertToNewArrayTest() {
-        ConvertorDict[] compare1 = new ConvertorDict[]{ConvertorDict.ARRAY, ConvertorDict.LIST, ConvertorDict.SET};
-        ConvertorDict[] target1 = EnumConvertor.convertToArray(ConvertorDict.class);
+        ConvertorTestDict[] compare1 = new ConvertorTestDict[]{ConvertorTestDict.ARRAY, ConvertorTestDict.LIST, ConvertorTestDict.SET};
+        ConvertorTestDict[] target1 = EnumConvertor.convertToArray(ConvertorTestDict.class);
         FlagAssert.isTrue(Arrays.equals(target1, compare1));
 
         String[] compare2 = new String[]{"array", "list", "set"};
-        String[] target2 = EnumConvertor.convertToArray(ConvertorDict.class, String.class, s -> s.key);
+        String[] target2 = EnumConvertor.convertToArray(ConvertorTestDict.class, String.class, s -> s.key);
         FlagAssert.isTrue(Arrays.equals(target2, compare2));
 
-        ConvertorDict[] compare3 = new ConvertorDict[]{ConvertorDict.LIST, ConvertorDict.SET};
-        ConvertorDict[] target3 = EnumConvertor.convertToArray(
-                ConvertorDict.class,
-                ConvertorDict.class,
+        ConvertorTestDict[] compare3 = new ConvertorTestDict[]{ConvertorTestDict.LIST, ConvertorTestDict.SET};
+        ConvertorTestDict[] target3 = EnumConvertor.convertToArray(
+                ConvertorTestDict.class,
+                ConvertorTestDict.class,
                 s -> s,
                 s -> CollectionConvertor.class.equals(s.value)
         );
@@ -45,20 +44,20 @@ public class EnumConvertorTest {
 
     @Test
     public void convertToNewListTest() {
-        List<ConvertorDict> compare1 = new ArrayList<>();
-        Collections.addAll(compare1, ConvertorDict.ARRAY, ConvertorDict.LIST, ConvertorDict.SET);
-        List<ConvertorDict> target1 = EnumConvertor.convertToList(ConvertorDict.class);
+        List<ConvertorTestDict> compare1 = new ArrayList<>();
+        Collections.addAll(compare1, ConvertorTestDict.ARRAY, ConvertorTestDict.LIST, ConvertorTestDict.SET);
+        List<ConvertorTestDict> target1 = EnumConvertor.convertToList(ConvertorTestDict.class);
         FlagAssert.isTrue(Objects.equals(target1, compare1));
 
         List<String> compare2 = new ArrayList<>();
         Collections.addAll(compare2, "array", "list", "set");
-        List<String> target2 = EnumConvertor.convertToList(ConvertorDict.class, s -> s.key);
+        List<String> target2 = EnumConvertor.convertToList(ConvertorTestDict.class, s -> s.key);
         FlagAssert.isTrue(Objects.equals(target2, compare2));
 
-        List<ConvertorDict> compare3 = new ArrayList<>();
-        Collections.addAll(compare3, ConvertorDict.LIST, ConvertorDict.SET);
-        List<ConvertorDict> target3 = EnumConvertor.convertToList(
-                ConvertorDict.class,
+        List<ConvertorTestDict> compare3 = new ArrayList<>();
+        Collections.addAll(compare3, ConvertorTestDict.LIST, ConvertorTestDict.SET);
+        List<ConvertorTestDict> target3 = EnumConvertor.convertToList(
+                ConvertorTestDict.class,
                 s -> s,
                 s -> CollectionConvertor.class.equals(s.value)
         );
@@ -67,22 +66,22 @@ public class EnumConvertorTest {
 
     @Test
     public void convertToOldListTest() {
-        List<ConvertorDict> compare1 = new ArrayList<>();
-        Collections.addAll(compare1, ConvertorDict.ARRAY, ConvertorDict.LIST, ConvertorDict.SET);
-        List<ConvertorDict> target1 = new ArrayList<>();
-        EnumConvertor.convertToCollection(ConvertorDict.class, target1);
+        List<ConvertorTestDict> compare1 = new ArrayList<>();
+        Collections.addAll(compare1, ConvertorTestDict.ARRAY, ConvertorTestDict.LIST, ConvertorTestDict.SET);
+        List<ConvertorTestDict> target1 = new ArrayList<>();
+        EnumConvertor.convertToCollection(ConvertorTestDict.class, target1);
         FlagAssert.isTrue(Objects.equals(target1, compare1));
 
         List<String> compare2 = new ArrayList<>();
         Collections.addAll(compare2, "array", "list", "set");
         List<String> target2 = new ArrayList<>();
-        EnumConvertor.convertToCollection(ConvertorDict.class, target2, s -> s.key);
+        EnumConvertor.convertToCollection(ConvertorTestDict.class, target2, s -> s.key);
         FlagAssert.isTrue(Objects.equals(target2, compare2));
 
-        List<ConvertorDict> compare3 = new ArrayList<>();
-        Collections.addAll(compare3, ConvertorDict.LIST, ConvertorDict.SET);
-        List<ConvertorDict> target3 = new ArrayList<>();
-        EnumConvertor.convertToCollection(ConvertorDict.class, target3,
+        List<ConvertorTestDict> compare3 = new ArrayList<>();
+        Collections.addAll(compare3, ConvertorTestDict.LIST, ConvertorTestDict.SET);
+        List<ConvertorTestDict> target3 = new ArrayList<>();
+        EnumConvertor.convertToCollection(ConvertorTestDict.class, target3,
                 s -> s,
                 s -> CollectionConvertor.class.equals(s.value)
         );
@@ -91,20 +90,20 @@ public class EnumConvertorTest {
 
     @Test
     public void convertToNewSetTest() {
-        Set<ConvertorDict> compare1 = new HashSet<>();
-        Collections.addAll(compare1, ConvertorDict.ARRAY, ConvertorDict.LIST, ConvertorDict.SET);
-        Set<ConvertorDict> target1 = EnumConvertor.convertToSet(ConvertorDict.class);
+        Set<ConvertorTestDict> compare1 = new HashSet<>();
+        Collections.addAll(compare1, ConvertorTestDict.ARRAY, ConvertorTestDict.LIST, ConvertorTestDict.SET);
+        Set<ConvertorTestDict> target1 = EnumConvertor.convertToSet(ConvertorTestDict.class);
         FlagAssert.isTrue(Objects.equals(target1, compare1));
 
         Set<String> compare2 = new HashSet<>();
         Collections.addAll(compare2, "array", "list", "set");
-        Set<String> target2 = EnumConvertor.convertToSet(ConvertorDict.class, s -> s.key);
+        Set<String> target2 = EnumConvertor.convertToSet(ConvertorTestDict.class, s -> s.key);
         FlagAssert.isTrue(Objects.equals(target2, compare2));
 
-        Set<ConvertorDict> compare3 = new HashSet<>();
-        Collections.addAll(compare3, ConvertorDict.LIST, ConvertorDict.SET);
-        Set<ConvertorDict> target3 = EnumConvertor.convertToSet(
-                ConvertorDict.class,
+        Set<ConvertorTestDict> compare3 = new HashSet<>();
+        Collections.addAll(compare3, ConvertorTestDict.LIST, ConvertorTestDict.SET);
+        Set<ConvertorTestDict> target3 = EnumConvertor.convertToSet(
+                ConvertorTestDict.class,
                 s -> s,
                 s -> CollectionConvertor.class.equals(s.value)
         );
@@ -113,22 +112,22 @@ public class EnumConvertorTest {
 
     @Test
     public void convertToOldSetTest() {
-        Set<ConvertorDict> compare1 = new HashSet<>();
-        Collections.addAll(compare1, ConvertorDict.ARRAY, ConvertorDict.LIST, ConvertorDict.SET);
-        Set<ConvertorDict> target1 = new HashSet<>();
-        EnumConvertor.convertToCollection(ConvertorDict.class, target1);
+        Set<ConvertorTestDict> compare1 = new HashSet<>();
+        Collections.addAll(compare1, ConvertorTestDict.ARRAY, ConvertorTestDict.LIST, ConvertorTestDict.SET);
+        Set<ConvertorTestDict> target1 = new HashSet<>();
+        EnumConvertor.convertToCollection(ConvertorTestDict.class, target1);
         FlagAssert.isTrue(Objects.equals(target1, compare1));
 
         Set<String> compare2 = new HashSet<>();
         Collections.addAll(compare2, "array", "list", "set");
         Set<String> target2 = new HashSet<>();
-        EnumConvertor.convertToCollection(ConvertorDict.class, target2, s -> s.key);
+        EnumConvertor.convertToCollection(ConvertorTestDict.class, target2, s -> s.key);
         FlagAssert.isTrue(Objects.equals(target2, compare2));
 
-        Set<ConvertorDict> compare3 = new HashSet<>();
-        Collections.addAll(compare3, ConvertorDict.LIST, ConvertorDict.SET);
-        Set<ConvertorDict> target3 = new HashSet<>();
-        EnumConvertor.convertToCollection(ConvertorDict.class, target3,
+        Set<ConvertorTestDict> compare3 = new HashSet<>();
+        Collections.addAll(compare3, ConvertorTestDict.LIST, ConvertorTestDict.SET);
+        Set<ConvertorTestDict> target3 = new HashSet<>();
+        EnumConvertor.convertToCollection(ConvertorTestDict.class, target3,
                 s -> s,
                 s -> CollectionConvertor.class.equals(s.value)
         );
@@ -137,36 +136,36 @@ public class EnumConvertorTest {
 
     @Test
     public void convertToNewMapTest() {
-        Map<ConvertorDict, ConvertorDict> compare1 = new HashMap<>();
-        compare1.put(ConvertorDict.ARRAY, ConvertorDict.ARRAY);
-        compare1.put(ConvertorDict.LIST, ConvertorDict.LIST);
-        compare1.put(ConvertorDict.SET, ConvertorDict.SET);
-        Map<ConvertorDict, ConvertorDict> target1 = EnumConvertor.convertToMap(ConvertorDict.class);
+        Map<ConvertorTestDict, ConvertorTestDict> compare1 = new HashMap<>();
+        compare1.put(ConvertorTestDict.ARRAY, ConvertorTestDict.ARRAY);
+        compare1.put(ConvertorTestDict.LIST, ConvertorTestDict.LIST);
+        compare1.put(ConvertorTestDict.SET, ConvertorTestDict.SET);
+        Map<ConvertorTestDict, ConvertorTestDict> target1 = EnumConvertor.convertToMap(ConvertorTestDict.class);
         FlagAssert.isTrue(Objects.equals(target1, compare1));
 
-        Map<String, ConvertorDict> compare2 = new HashMap<>();
-        compare2.put(ConvertorDict.ARRAY.key, ConvertorDict.ARRAY);
-        compare2.put(ConvertorDict.LIST.key, ConvertorDict.LIST);
-        compare2.put(ConvertorDict.SET.key, ConvertorDict.SET);
-        Map<String, ConvertorDict> target2 = EnumConvertor.convertToMap(ConvertorDict.class, s -> s.key);
+        Map<String, ConvertorTestDict> compare2 = new HashMap<>();
+        compare2.put(ConvertorTestDict.ARRAY.key, ConvertorTestDict.ARRAY);
+        compare2.put(ConvertorTestDict.LIST.key, ConvertorTestDict.LIST);
+        compare2.put(ConvertorTestDict.SET.key, ConvertorTestDict.SET);
+        Map<String, ConvertorTestDict> target2 = EnumConvertor.convertToMap(ConvertorTestDict.class, s -> s.key);
         FlagAssert.isTrue(Objects.equals(target2, compare2));
 
         Map<String, Class<?>> compare3 = new HashMap<>();
-        compare3.put(ConvertorDict.ARRAY.key, ConvertorDict.ARRAY.value);
-        compare3.put(ConvertorDict.LIST.key, ConvertorDict.LIST.value);
-        compare3.put(ConvertorDict.SET.key, ConvertorDict.SET.value);
+        compare3.put(ConvertorTestDict.ARRAY.key, ConvertorTestDict.ARRAY.value);
+        compare3.put(ConvertorTestDict.LIST.key, ConvertorTestDict.LIST.value);
+        compare3.put(ConvertorTestDict.SET.key, ConvertorTestDict.SET.value);
         Map<String, Class<?>> target3 = EnumConvertor.convertToMap(
-                ConvertorDict.class,
+                ConvertorTestDict.class,
                 s -> s.key,
                 s -> s.value
         );
         FlagAssert.isTrue(Objects.equals(target3, compare3));
 
         Map<String, Class<?>> compare4 = new HashMap<>();
-        compare4.put(ConvertorDict.LIST.key, ConvertorDict.LIST.value);
-        compare4.put(ConvertorDict.SET.key, ConvertorDict.SET.value);
+        compare4.put(ConvertorTestDict.LIST.key, ConvertorTestDict.LIST.value);
+        compare4.put(ConvertorTestDict.SET.key, ConvertorTestDict.SET.value);
         Map<String, Class<?>> target4 = EnumConvertor.convertToMap(
-                ConvertorDict.class,
+                ConvertorTestDict.class,
                 s -> s.key,
                 s -> s.value,
                 s -> CollectionConvertor.class.equals(s.value)
@@ -176,29 +175,29 @@ public class EnumConvertorTest {
 
     @Test
     public void convertToOldMapTest() {
-        Map<ConvertorDict, ConvertorDict> compare1 = new HashMap<>();
-        compare1.put(ConvertorDict.ARRAY, ConvertorDict.ARRAY);
-        compare1.put(ConvertorDict.LIST, ConvertorDict.LIST);
-        compare1.put(ConvertorDict.SET, ConvertorDict.SET);
-        Map<ConvertorDict, ConvertorDict> target1 = new HashMap<>();
-        EnumConvertor.convertToMap(ConvertorDict.class, target1);
+        Map<ConvertorTestDict, ConvertorTestDict> compare1 = new HashMap<>();
+        compare1.put(ConvertorTestDict.ARRAY, ConvertorTestDict.ARRAY);
+        compare1.put(ConvertorTestDict.LIST, ConvertorTestDict.LIST);
+        compare1.put(ConvertorTestDict.SET, ConvertorTestDict.SET);
+        Map<ConvertorTestDict, ConvertorTestDict> target1 = new HashMap<>();
+        EnumConvertor.convertToMap(ConvertorTestDict.class, target1);
         FlagAssert.isTrue(Objects.equals(target1, compare1));
 
-        Map<String, ConvertorDict> compare2 = new HashMap<>();
-        compare2.put(ConvertorDict.ARRAY.key, ConvertorDict.ARRAY);
-        compare2.put(ConvertorDict.LIST.key, ConvertorDict.LIST);
-        compare2.put(ConvertorDict.SET.key, ConvertorDict.SET);
-        Map<String, ConvertorDict> target2 = new HashMap<>();
-        EnumConvertor.convertToMap(ConvertorDict.class, target2, s -> s.key);
+        Map<String, ConvertorTestDict> compare2 = new HashMap<>();
+        compare2.put(ConvertorTestDict.ARRAY.key, ConvertorTestDict.ARRAY);
+        compare2.put(ConvertorTestDict.LIST.key, ConvertorTestDict.LIST);
+        compare2.put(ConvertorTestDict.SET.key, ConvertorTestDict.SET);
+        Map<String, ConvertorTestDict> target2 = new HashMap<>();
+        EnumConvertor.convertToMap(ConvertorTestDict.class, target2, s -> s.key);
         FlagAssert.isTrue(Objects.equals(target2, compare2));
 
         Map<String, Class<?>> compare3 = new HashMap<>();
-        compare3.put(ConvertorDict.ARRAY.key, ConvertorDict.ARRAY.value);
-        compare3.put(ConvertorDict.LIST.key, ConvertorDict.LIST.value);
-        compare3.put(ConvertorDict.SET.key, ConvertorDict.SET.value);
+        compare3.put(ConvertorTestDict.ARRAY.key, ConvertorTestDict.ARRAY.value);
+        compare3.put(ConvertorTestDict.LIST.key, ConvertorTestDict.LIST.value);
+        compare3.put(ConvertorTestDict.SET.key, ConvertorTestDict.SET.value);
         Map<String, Class<?>> target3 = new HashMap<>();
         EnumConvertor.convertToMap(
-                ConvertorDict.class,
+                ConvertorTestDict.class,
                 target3,
                 s -> s.key,
                 s -> s.value
@@ -206,36 +205,16 @@ public class EnumConvertorTest {
         FlagAssert.isTrue(Objects.equals(target3, compare3));
 
         Map<String, Class<?>> compare4 = new HashMap<>();
-        compare4.put(ConvertorDict.LIST.key, ConvertorDict.LIST.value);
-        compare4.put(ConvertorDict.SET.key, ConvertorDict.SET.value);
+        compare4.put(ConvertorTestDict.LIST.key, ConvertorTestDict.LIST.value);
+        compare4.put(ConvertorTestDict.SET.key, ConvertorTestDict.SET.value);
         Map<String, Class<?>> target4 = new HashMap<>();
         EnumConvertor.convertToMap(
-                ConvertorDict.class,
+                ConvertorTestDict.class,
                 target4,
                 s -> s.key,
                 s -> s.value,
                 s -> CollectionConvertor.class.equals(s.value)
         );
         FlagAssert.isTrue(Objects.equals(target4, compare4));
-    }
-
-    enum ConvertorDict implements IDictEnum<String, Class<?>> {
-
-        ARRAY("array", ArrayConvertor.class),
-        LIST("list", CollectionConvertor.class),
-        SET("set", CollectionConvertor.class),
-
-        // 预留扩展位
-        ;
-
-        @Getter
-        public final String key;
-        @Getter
-        public final Class<?> value;
-
-        ConvertorDict(String key, Class<?> value) {
-            this.key = key;
-            this.value = value;
-        }
     }
 }

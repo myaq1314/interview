@@ -1,5 +1,7 @@
 package org.czh.interview.commons.entity;
 
+import org.czh.interview.commons.entity.parent.IBaseEntity;
+
 /**
  * @author : czh
  * description :
@@ -7,9 +9,9 @@ package org.czh.interview.commons.entity;
  * email 916419307@qq.com
  */
 @SuppressWarnings("unused")
-public interface PersonTest extends java.io.Serializable {
+public interface PersonTest extends IBaseEntity {
 
-    default String getType() {
+    default String type() {
         return "Person";
     }
 

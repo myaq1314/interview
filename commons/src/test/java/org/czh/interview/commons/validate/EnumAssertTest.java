@@ -1,6 +1,6 @@
 package org.czh.interview.commons.validate;
 
-import org.czh.interview.commons.enums.parent.IBaseEnum;
+import org.czh.interview.commons.enums.ConvertorTestDict;
 import org.junit.Test;
 
 /**
@@ -13,11 +13,7 @@ public class EnumAssertTest {
 
     @Test
     public void test() {
-        EnumAssert.isEnum(TestEnum.class);
+        EnumAssert.isEnum(ConvertorTestDict.class);
         EnumAssert.isNotEnum(Object.class);
     }
-
-    enum TestEnum implements IBaseEnum {
-    }
-
 }
