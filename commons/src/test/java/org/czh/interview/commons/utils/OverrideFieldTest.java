@@ -5,6 +5,13 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 import java.util.List;
 
+@SuppressWarnings("unused")
+interface Earth extends java.io.Serializable {
+    default String getType() {
+        return "Earth";
+    }
+}
+
 /**
  * @author : czh
  * description :
@@ -24,18 +31,11 @@ public class OverrideFieldTest {
 }
 
 @SuppressWarnings("unused")
-interface Earth extends java.io.Serializable {
-    default String getType() {
-        return "Earth";
-    }
-}
-
-@SuppressWarnings("unused")
 class Country implements Earth {
-    private String privateField;
+    public String publicField;
     protected String protectedField;
     String defaultField;
-    public String publicField;
+    private String privateField;
 
     public Country(String privateField,
                    String protectedField,
@@ -50,10 +50,10 @@ class Country implements Earth {
 
 @SuppressWarnings("unused")
 class Province extends Country {
-    private Double privateField;
+    public Double publicField;
     protected Double protectedField;
     Double defaultField;
-    public Double publicField;
+    private Double privateField;
 
     public Province(Double privateField,
                     Double protectedField,
@@ -69,10 +69,10 @@ class Province extends Country {
 
 @SuppressWarnings("unused")
 class City extends Province {
-    private Integer privateField;
+    public Integer publicField;
     protected Integer protectedField;
     Integer defaultField;
-    public Integer publicField;
+    private Integer privateField;
 
     public City(Integer privateField,
                 Integer protectedField,

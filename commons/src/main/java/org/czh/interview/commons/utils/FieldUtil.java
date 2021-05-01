@@ -455,8 +455,8 @@ public final class FieldUtil {
      * FieldUtils.getAllFields() 原理：
      * 循环调用，依次取出 本类、父类、祖父类的所有 属性
      *
-     * @param clazz 类对象
-     *              @param annoClazz 属性中修饰的注解类
+     * @param clazz     类对象
+     * @param annoClazz 属性中修饰的注解类
      * @return 属性集合
      */
     public static List<Field> queryAllFieldListWithAnno(@NotNullTag final Class<?> clazz,
@@ -479,8 +479,8 @@ public final class FieldUtil {
      * FieldUtils.getAllFields() 原理：
      * 循环调用，依次取出 本类、父类、祖父类的所有 属性
      *
-     * @param clazz 类对象
-     *              @param annoClazz 属性中修饰的注解类
+     * @param clazz     类对象
+     * @param annoClazz 属性中修饰的注解类
      * @return 属性数组
      */
     public static Field[] queryAllFieldsWithAnno(@NotNullTag final Class<?> clazz,
@@ -498,8 +498,8 @@ public final class FieldUtil {
      * 该数组反映由这个class对象表示的类或接口的所有可访问的公共字段。
      * 输出结果：sonPublicField	parentPublicField
      *
-     * @param clazz 类对象
-     *              @param annoClazz 属性中修饰的注解类
+     * @param clazz     类对象
+     * @param annoClazz 属性中修饰的注解类
      * @return 属性数组
      */
     public static List<Field> queryPublicFieldListWithAnno(@NotNullTag final Class<?> clazz,
@@ -519,8 +519,8 @@ public final class FieldUtil {
      * 该数组反映由这个class对象表示的类或接口的所有可访问的公共字段。
      * 输出结果：sonPublicField	parentPublicField
      *
-     * @param clazz 类对象
-     *              @param annoClazz 属性中修饰的注解类
+     * @param clazz     类对象
+     * @param annoClazz 属性中修饰的注解类
      * @return 属性数组
      */
     public static Field[] queryPublicFieldsWithAnno(@NotNullTag final Class<?> clazz,
@@ -542,8 +542,8 @@ public final class FieldUtil {
      * 但不包括继承字段。
      * 输出结果：sonPrivateField sonProtectedField sonDefaultField sonPublicField
      *
-     * @param clazz 类对象
-     *              @param annoClazz 属性中修饰的注解类
+     * @param clazz     类对象
+     * @param annoClazz 属性中修饰的注解类
      * @return 属性集合
      */
     public static List<Field> queryOwnFieldListWithAnno(@NotNullTag final Class<?> clazz,
@@ -565,7 +565,7 @@ public final class FieldUtil {
      * 但不包括继承字段。
      * 输出结果：sonPrivateField sonProtectedField sonDefaultField sonPublicField
      *
-     * @param clazz 类对象
+     * @param clazz     类对象
      * @param annoClazz 属性中修饰的注解类
      * @return 属性数组
      */

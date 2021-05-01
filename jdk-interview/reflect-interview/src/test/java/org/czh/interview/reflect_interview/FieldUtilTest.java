@@ -8,6 +8,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+@SuppressWarnings("unused")
+interface Person extends java.io.Serializable {
+    default String getType() {
+        return "Person";
+    }
+}
+
 /**
  * @author : czh
  * description :
@@ -139,18 +146,11 @@ public class FieldUtilTest {
 }
 
 @SuppressWarnings("unused")
-interface Person extends java.io.Serializable {
-    default String getType() {
-        return "Person";
-    }
-}
-
-@SuppressWarnings("unused")
 class Parent implements Person {
-    private String parentPrivateField;
+    public String parentPublicField;
     protected String parentProtectedField;
     String parentDefaultField;
-    public String parentPublicField;
+    private String parentPrivateField;
 
     public Parent(String parentPrivateField,
                   String parentProtectedField,
@@ -182,10 +182,10 @@ class Parent implements Person {
 
 @SuppressWarnings("unused")
 class Son extends Parent {
-    private String sonPrivateField;
+    public String sonPublicField;
     protected String sonProtectedField;
     String sonDefaultField;
-    public String sonPublicField;
+    private String sonPrivateField;
 
     public Son(String parentPrivateField,
                String parentProtectedField,
@@ -221,10 +221,10 @@ class Son extends Parent {
 
 @SuppressWarnings("unused")
 class Grandson extends Son {
-    private String grandsonPrivateField;
+    public String grandsonPublicField;
     protected String grandsonProtectedField;
     String grandsonDefaultField;
-    public String grandsonPublicField;
+    private String grandsonPrivateField;
 
     public Grandson(String parentPrivateField,
                     String parentProtectedField,

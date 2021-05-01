@@ -17,35 +17,35 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class GrandsonTest extends SonTest {
 
-    @NotBlank
-    @Getter
-    private String gPri;
-    @NotEmpty
-    @Getter
-    protected String gPro;
-    @NotNull
-    @Getter
-    String gDef;
     @Pattern(regexp = "yyyy-MM-dd")
     @Getter
-    public String gPub;
-
-    @NotBlank
-    @Getter
-    private static String gPriSta;
+    public static String gPubSta;
     @NotEmpty
     @Getter
     protected static String gProSta;
     @NotNull
     @Getter
     static String gDefSta;
-    @Pattern(regexp = "yyyy-MM-dd")
+    @NotBlank
     @Getter
-    public static String gPubSta;
+    private static String gPriSta;
 
     static {
         init();
     }
+
+    @Pattern(regexp = "yyyy-MM-dd")
+    @Getter
+    public String gPub;
+    @NotEmpty
+    @Getter
+    protected String gPro;
+    @NotNull
+    @Getter
+    String gDef;
+    @NotBlank
+    @Getter
+    private String gPri;
 
     public GrandsonTest() {
         super();
@@ -61,6 +61,22 @@ public class GrandsonTest extends SonTest {
         GrandsonTest.gProSta = "gProStaVa";
         GrandsonTest.gDefSta = "gDefStaVa";
         GrandsonTest.gPubSta = "gPubStaVa";
+    }
+
+    private static String getGPriStaMet() {
+        return "gPriStaMet";
+    }
+
+    protected static String getGProStaMet() {
+        return "gProStaMet";
+    }
+
+    static String getGDefStaMet() {
+        return "gDefStaMet";
+    }
+
+    public static String getGPubStaMet() {
+        return "gPubStaMet";
     }
 
     @Override
@@ -110,21 +126,5 @@ public class GrandsonTest extends SonTest {
 
     public String getGPubMet() {
         return "gPubMet";
-    }
-
-    private static String getGPriStaMet() {
-        return "gPriStaMet";
-    }
-
-    protected static String getGProStaMet() {
-        return "gProStaMet";
-    }
-
-    static String getGDefStaMet() {
-        return "gDefStaMet";
-    }
-
-    public static String getGPubStaMet() {
-        return "gPubStaMet";
     }
 }

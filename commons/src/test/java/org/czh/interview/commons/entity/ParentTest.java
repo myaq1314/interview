@@ -17,35 +17,35 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class ParentTest implements PersonTest {
 
-    @NotBlank
-    @Getter
-    private String pPri;
-    @NotEmpty
-    @Getter
-    protected String pPro;
-    @NotNull
-    @Getter
-    String pDef;
     @Pattern(regexp = "yyyy-MM-dd")
     @Getter
-    public String pPub;
-
-    @NotBlank
-    @Getter
-    private static String pPriSta;
+    public static String pPubSta;
     @NotEmpty
     @Getter
     protected static String pProSta;
     @NotNull
     @Getter
     static String pDefSta;
-    @Pattern(regexp = "yyyy-MM-dd")
+    @NotBlank
     @Getter
-    public static String pPubSta;
+    private static String pPriSta;
 
     static {
         init();
     }
+
+    @Pattern(regexp = "yyyy-MM-dd")
+    @Getter
+    public String pPub;
+    @NotEmpty
+    @Getter
+    protected String pPro;
+    @NotNull
+    @Getter
+    String pDef;
+    @NotBlank
+    @Getter
+    private String pPri;
 
     public ParentTest() {
         this.pPri = "pPriVa";
@@ -60,6 +60,22 @@ public class ParentTest implements PersonTest {
         ParentTest.pProSta = "pProStaVa";
         ParentTest.pDefSta = "pDefStaVa";
         ParentTest.pPubSta = "pPubStaVa";
+    }
+
+    private static String getPPriStaMet() {
+        return "pPriStaMet";
+    }
+
+    protected static String getPProStaMet() {
+        return "pProStaMet";
+    }
+
+    static String getPDefStaMet() {
+        return "pDefStaMet";
+    }
+
+    public static String getPPubStaMet() {
+        return "pPubStaMet";
     }
 
     @Override
@@ -102,21 +118,5 @@ public class ParentTest implements PersonTest {
 
     public String getPPubMet() {
         return "pPubMet";
-    }
-
-    private static String getPPriStaMet() {
-        return "pPriStaMet";
-    }
-
-    protected static String getPProStaMet() {
-        return "pProStaMet";
-    }
-
-    static String getPDefStaMet() {
-        return "pDefStaMet";
-    }
-
-    public static String getPPubStaMet() {
-        return "pPubStaMet";
     }
 }

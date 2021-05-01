@@ -17,35 +17,35 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class SonTest extends ParentTest {
 
-    @NotBlank
-    @Getter
-    private String sPri;
-    @NotEmpty
-    @Getter
-    protected String sPro;
-    @NotNull
-    @Getter
-    String sDef;
     @Pattern(regexp = "yyyy-MM-dd")
     @Getter
-    public String sPub;
-
-    @NotBlank
-    @Getter
-    private static String sPriSta;
+    public static String sPubSta;
     @NotEmpty
     @Getter
     protected static String sProSta;
     @NotNull
     @Getter
     static String sDefSta;
-    @Pattern(regexp = "yyyy-MM-dd")
+    @NotBlank
     @Getter
-    public static String sPubSta;
+    private static String sPriSta;
 
     static {
         init();
     }
+
+    @Pattern(regexp = "yyyy-MM-dd")
+    @Getter
+    public String sPub;
+    @NotEmpty
+    @Getter
+    protected String sPro;
+    @NotNull
+    @Getter
+    String sDef;
+    @NotBlank
+    @Getter
+    private String sPri;
 
     public SonTest() {
         super();
@@ -61,6 +61,22 @@ public class SonTest extends ParentTest {
         SonTest.sProSta = "sProStaVa";
         SonTest.sDefSta = "sDefStaVa";
         SonTest.sPubSta = "sPubStaVa";
+    }
+
+    private static String getSPriStaMet() {
+        return "sPriStaMet";
+    }
+
+    protected static String getSProStaMet() {
+        return "sProStaMet";
+    }
+
+    static String getSDefStaMet() {
+        return "sDefStaMet";
+    }
+
+    public static String getSPubStaMet() {
+        return "sPubStaMet";
     }
 
     @Override
@@ -106,21 +122,5 @@ public class SonTest extends ParentTest {
 
     public String getSPubMet() {
         return "sPubMet";
-    }
-
-    private static String getSPriStaMet() {
-        return "sPriStaMet";
-    }
-
-    protected static String getSProStaMet() {
-        return "sProStaMet";
-    }
-
-    static String getSDefStaMet() {
-        return "sDefStaMet";
-    }
-
-    public static String getSPubStaMet() {
-        return "sPubStaMet";
     }
 }
