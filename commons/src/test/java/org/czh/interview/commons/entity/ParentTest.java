@@ -1,6 +1,8 @@
 package org.czh.interview.commons.entity;
 
 import lombok.Getter;
+import org.junit.Assert;
+import org.junit.Test;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -76,6 +78,11 @@ public class ParentTest implements PersonTest {
 
     public static String getPPubStaMet() {
         return "pPubStaMet";
+    }
+
+    @Test
+    public void test() {
+        Assert.assertEquals("pPriVa", new ParentTest().getPPri());
     }
 
     @Override

@@ -1,6 +1,8 @@
 package org.czh.interview.commons.entity;
 
 import org.czh.interview.commons.entity.parent.IBaseEntity;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author : czh
@@ -15,4 +17,13 @@ public interface PersonTest extends IBaseEntity {
         return "Person";
     }
 
+    @Test
+    default void test() {
+        Assert.assertEquals("Person", new PersonTest() {
+            @Override
+            public void test() {
+
+            }
+        }.type());
+    }
 }

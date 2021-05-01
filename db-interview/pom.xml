@@ -22,6 +22,7 @@
         <module>jdbc-spring-interview</module>
         <module>mybatis-interview</module>
         <module>mybatis-spring-interview</module>
+        <module>mysql-interview</module>
         <module>redis-interview</module>
         <module>redis-spring-interview</module>
     </modules>

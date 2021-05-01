@@ -1,11 +1,12 @@
 package org.czh.interview.commons.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.czh.interview.commons.entity.parent.IBaseEntity;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author : czh
@@ -17,11 +18,15 @@ import org.czh.interview.commons.entity.parent.IBaseEntity;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor
-@AllArgsConstructor
 public class EntityTest implements IBaseEntity {
 
     private Long id;
     private String name;
     private int age;
     private Double price;
+
+    @Test
+    public void test() {
+        Assert.assertEquals(0, new EntityTest().getAge());
+    }
 }

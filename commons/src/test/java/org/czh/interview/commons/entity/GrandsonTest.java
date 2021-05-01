@@ -1,6 +1,8 @@
 package org.czh.interview.commons.entity;
 
 import lombok.Getter;
+import org.junit.Assert;
+import org.junit.Test;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -77,6 +79,11 @@ public class GrandsonTest extends SonTest {
 
     public static String getGPubStaMet() {
         return "gPubStaMet";
+    }
+
+    @Test
+    public void test() {
+        Assert.assertEquals("gPriVa", new GrandsonTest().getGPri());
     }
 
     @Override
