@@ -33,6 +33,17 @@ public final class EnumConvertor {
      * 枚举 取 第一个值
      *
      * @param sourceClazz 枚举类 类型
+     * @param <S>         枚举类型
+     * @return 第一个值
+     */
+    public static <S> S convertToFirst(@NotNullTag final Class<S> sourceClazz) {
+        return convertToFirst(sourceClazz, null);
+    }
+
+    /**
+     * 枚举 取 第一个值
+     *
+     * @param sourceClazz 枚举类 类型
      * @param filter      过滤器
      * @param <S>         枚举类型
      * @return 第一个值

@@ -37,6 +37,17 @@ public final class ArrayConvertor {
      * 数组 转换为 第一个值
      *
      * @param source 源数组
+     * @param <S>    源数组元素类型
+     * @return 第一个值
+     */
+    public static <S> S convertToFirst(@NotEmptyTag final S[] source) {
+        return convertToFirst(source, null);
+    }
+
+    /**
+     * 数组 转换为 第一个值
+     *
+     * @param source 源数组
      * @param filter 过滤器
      * @param <S>    源数组元素类型
      * @return 第一个值

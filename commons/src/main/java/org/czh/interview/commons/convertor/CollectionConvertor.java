@@ -37,6 +37,17 @@ public final class CollectionConvertor {
      * 集合 转换为 第一个值
      *
      * @param source 源集合
+     * @param <S>    源集合元素类型
+     * @return 第一个值
+     */
+    public static <S> S convertToFirst(@NotEmptyTag final Collection<S> source) {
+        return convertToFirst(source, null);
+    }
+
+    /**
+     * 集合 转换为 第一个值
+     *
+     * @param source 源集合
      * @param filter 过滤器
      * @param <S>    源集合元素类型
      * @return 第一个值
