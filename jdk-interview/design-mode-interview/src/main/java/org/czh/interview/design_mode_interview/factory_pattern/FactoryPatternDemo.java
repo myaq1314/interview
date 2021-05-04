@@ -15,13 +15,13 @@ public class FactoryPatternDemo {
         CarFactory carFactory = new CarFactory();
 
         // 生产 奥迪 汽车
-        Car aoDiCar = carFactory.create("AoDi");
+        ICar aoDiCar = carFactory.make("AoDi");
 
         // 开车旅游
         aoDiCar.travel();
 
         // 生产 时风四轮拉货 汽车
-        Car shiFengCar = carFactory.create("ShiFeng");
+        ICar shiFengCar = carFactory.make("ShiFeng");
 
         // 开车运输
         shiFengCar.transport();
@@ -29,14 +29,14 @@ public class FactoryPatternDemo {
 }
 
 // 汽车 接口
-interface Car {
+interface ICar {
     void travel(); // 旅游
 
     void transport(); // 运输
 }
 
 // 奥迪 汽车
-class AoDiCar implements Car {
+class AoDiCar implements ICar {
     @Override
     public void travel() { // 旅游
         System.out.println("开奥迪车去旅游，安全又快");
@@ -49,7 +49,7 @@ class AoDiCar implements Car {
 }
 
 // 时风四轮拉货 汽车
-class ShiFengCar implements Car {
+class ShiFengCar implements ICar {
     @Override
     public void travel() { // 旅游
         System.out.println("开时风四轮拉货车去旅游，风吹日晒");
@@ -62,7 +62,7 @@ class ShiFengCar implements Car {
 }
 
 class CarFactory {
-    public Car create(String name) {
+    public ICar make(String name) {
         EmptyAssert.isNotBlank(name, "请说出要生产的汽车名称");
 
         if ("AoDi".equals(name)) {
