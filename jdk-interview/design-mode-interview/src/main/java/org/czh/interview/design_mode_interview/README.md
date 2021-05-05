@@ -2,7 +2,7 @@
 
 |序号|模式|包括|英文名称|读音|代码入口|
 |:----|:----|:----|:----|:----|:----|
-|1|创建型模式|工厂模式|Factory Pattern| |[入口](./factory_pattern/工厂模式.md)|
+|1|创建型模式|工厂模式|Factory Pattern| |[入口](factory_pattern/README.md)|
 | | |抽象工厂模式|Abstract Factory Pattern| |[入口]()|
 | | |单例模式|Singleton pattern| |[入口]()|
 | | |建造者模式|Builder Pattern| |[入口]()|
