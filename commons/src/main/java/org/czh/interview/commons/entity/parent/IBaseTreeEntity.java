@@ -1,10 +1,10 @@
-package org.czh.interview.commons.entity.parent.resp;
+package org.czh.interview.commons.entity.parent;
 
-import org.czh.interview.commons.entity.parent.IBaseEntity;
 import org.czh.interview.commons.validate.EmptyValidate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author : czh
@@ -12,7 +12,7 @@ import java.util.List;
  * date : 2021-04-30
  * email 916419307@qq.com
  */
-public interface BaseTreeRespVO<T extends BaseTreeRespVO<T>> extends IBaseEntity {
+public interface IBaseTreeEntity<T extends IBaseTreeEntity<T>> extends IBaseEntity {
 
     List<T> getChildren();
 

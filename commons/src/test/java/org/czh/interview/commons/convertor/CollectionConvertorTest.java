@@ -1,12 +1,15 @@
 package org.czh.interview.commons.convertor;
 
 import com.alibaba.fastjson.JSONArray;
+import org.czh.interview.commons.entity.NumTreeEntity;
 import org.czh.interview.commons.validate.FlagAssert;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -488,5 +491,39 @@ public class CollectionConvertorTest {
         String compare2 = "[\"set\",\"array\",\"list\"]";
         String target2 = CollectionConvertor.convertToJsonString(sourceSet);
         FlagAssert.isTrue(Objects.equals(target2, compare2));
+    }
+
+    @Test
+    @SuppressWarnings("all")
+    public void convertToTreeFromListTest() {
+        List<NumTreeEntity> source = new ArrayList<>();
+        for (int i = 1; i < 5; i++) { // 1/2/3/4
+            for (int j = 6; j > 0; j--) { // 6/5/4/3/2/1
+                for (int k = 2; k < 4; k++) { // 2/3
+                    NumTreeEntity lastNode = new NumTreeEntity(String.valueOf(i) + "." + String.valueOf(j) + "." + String.valueOf(k), String.valueOf(i) + "." + String.valueOf(j));
+                    if (!source.contains(lastNode)) {
+                        source.add(lastNode);
+                    }
+                    NumTreeEntity middleNode = new NumTreeEntity(String.valueOf(i) + "." + String.valueOf(j), String.valueOf(i));
+                    if (!source.contains(middleNode)) {
+                        source.add(middleNode);
+                    }
+                    NumTreeEntity firstNode = new NumTreeEntity(String.valueOf(i), null);
+                    if (!source.contains(firstNode)) {
+                        source.add(firstNode);
+                    }
+                }
+            }
+        }
+        System.out.println(source);
+        System.out.println(source.size());
+
+        source.sort(Comparator.comparing(o -> new BigDecimal(o.getId().replace(".", "0"))));
+        System.out.println(source);
+        System.out.println(source.size());
+
+        List<NumTreeEntity> treeTarget1 = CollectionConvertor.convertToTree(source, NumTreeEntity::getId, NumTreeEntity::getParentId, null);
+        System.out.println(treeTarget1);
+
     }
 }
