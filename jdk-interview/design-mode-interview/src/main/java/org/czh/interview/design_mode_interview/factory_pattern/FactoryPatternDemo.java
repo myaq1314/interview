@@ -30,34 +30,35 @@ public class FactoryPatternDemo {
 
 // 汽车 接口
 interface ICar {
+
     void travel(); // 旅游
 
     void transport(); // 运输
-}
 
-// 奥迪 汽车
-class AoDiCar implements ICar {
-    @Override
-    public void travel() { // 旅游
-        System.out.println("开奥迪车去旅游，安全又快");
+    // 奥迪 汽车
+    class AoDiCar implements ICar {
+        @Override
+        public void travel() { // 旅游
+            System.out.println("开奥迪车去旅游，安全又快");
+        }
+
+        @Override
+        public void transport() {  // 运输
+            System.out.println("开奥迪车搞运输，赚不够汽油钱");
+        }
     }
 
-    @Override
-    public void transport() {  // 运输
-        System.out.println("开奥迪车搞运输，赚不够汽油钱");
-    }
-}
+    // 时风四轮拉货 汽车
+    class ShiFengCar implements ICar {
+        @Override
+        public void travel() { // 旅游
+            System.out.println("开时风四轮拉货车去旅游，风吹日晒");
+        }
 
-// 时风四轮拉货 汽车
-class ShiFengCar implements ICar {
-    @Override
-    public void travel() { // 旅游
-        System.out.println("开时风四轮拉货车去旅游，风吹日晒");
-    }
-
-    @Override
-    public void transport() {  // 运输
-        System.out.println("开时风四轮拉货车搞运输，赚钱满满");
+        @Override
+        public void transport() {  // 运输
+            System.out.println("开时风四轮拉货车搞运输，赚钱满满");
+        }
     }
 }
 
@@ -66,9 +67,9 @@ class CarFactory {
         EmptyAssert.isNotBlank(name, "请说出要生产的汽车名称");
 
         if ("AoDi".equals(name)) {
-            return new AoDiCar();
+            return new ICar.AoDiCar();
         } else if ("ShiFeng".equals(name)) {
-            return new ShiFengCar();
+            return new ICar.ShiFengCar();
         }
 
         throw new CommonException("还没有配置生产" + name + "这种汽车的生产线");
