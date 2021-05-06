@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>design-mode-interview</module>
         <module>exception-interview</module>
         <module>io-interview</module>
         <module>json-interview</module>

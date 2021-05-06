@@ -3,24 +3,6 @@ package org.czh.interview.design_mode_interview.builder_pattern;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author : czh
- * description :
- * date : 2021-05-05
- * email 916419307@qq.com
- */
-public class BuilderPatternDemo {
-    public static void main(String[] args) {
-        MealBuilder mealBuilder = new MealBuilder();
-
-        Meal vegMeal = mealBuilder.prepareVegMeal();
-        vegMeal.showItems();
-
-        Meal nonVegMeal = mealBuilder.prepareNonVegMeal();
-        nonVegMeal.showItems();
-    }
-}
-
 // 食物条目 接口
 interface IItem {
 
@@ -127,15 +109,32 @@ interface Packing {
     }
 }
 
+/**
+ * @author : czh
+ * description :
+ * date : 2021-05-05
+ * email 916419307@qq.com
+ */
+public class BuilderPatternDemo {
+    public static void main(String[] args) {
+        MealBuilder mealBuilder = new MealBuilder();
+
+        Meal vegMeal = mealBuilder.prepareVegMeal();
+        vegMeal.showItems();
+
+        Meal nonVegMeal = mealBuilder.prepareNonVegMeal();
+        nonVegMeal.showItems();
+    }
+}
+
 // 套餐类，存放 食物条目 的集合
 class Meal {
     private String mealName;
+    private List<IItem> items = new ArrayList<>();
 
     public Meal(String mealName) {
         this.mealName = mealName;
     }
-
-    private List<IItem> items = new ArrayList<>();
 
     public void addItem(IItem item) {
         items.add(item);

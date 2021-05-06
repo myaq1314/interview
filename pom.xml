@@ -12,6 +12,7 @@
     <modules>
         <module>commons</module>
         <module>db-interview</module>
+        <module>design-mode-interview</module>
         <module>frame-interview</module>
         <module>jdk-interview</module>
         <module>mq-interview</module>

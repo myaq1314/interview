@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>org.czh.interview</groupId>
-        <artifactId>jdk-interview</artifactId>
+        <artifactId>interview</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

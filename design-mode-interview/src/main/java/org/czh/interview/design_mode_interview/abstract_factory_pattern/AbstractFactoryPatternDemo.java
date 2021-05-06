@@ -3,6 +3,20 @@ package org.czh.interview.design_mode_interview.abstract_factory_pattern;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
 
+// 汽车 接口
+interface ICar {
+    void travel(); // 旅游
+
+    void transport(); // 运输
+}
+
+// 食物 接口
+interface IFood {
+    void shape(); // 外形
+
+    void taste(); // 口味
+}
+
 /**
  * @author : czh
  * description :
@@ -40,20 +54,6 @@ public class AbstractFactoryPatternDemo {
         qiaoKeLiPaiFood.taste();
 
     }
-}
-
-// 汽车 接口
-interface ICar {
-    void travel(); // 旅游
-
-    void transport(); // 运输
-}
-
-// 食物 接口
-interface IFood {
-    void shape(); // 外形
-
-    void taste(); // 口味
 }
 
 // 奥迪 汽车
