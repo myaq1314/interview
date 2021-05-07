@@ -48,16 +48,16 @@ public class PrototypePatternDemo {
         private String info;
         private School school;
 
-        public void display() {
-            System.out.println(name + info + school.getName() + "[" + school.getAddress() + "]");
-        }
-
         public Citation(Citation citation) {
             EmptyAssert.isNotNull(citation);
 
             this.name = citation.name;
             this.info = citation.info;
             this.school = new School(citation.school);
+        }
+
+        public void display() {
+            System.out.println(name + info + school.getName() + "[" + school.getAddress() + "]");
         }
 
         public Citation clone() throws CloneNotSupportedException {
