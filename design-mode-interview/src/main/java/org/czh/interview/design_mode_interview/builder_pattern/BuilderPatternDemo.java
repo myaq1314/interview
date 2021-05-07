@@ -48,7 +48,9 @@ public class BuilderPatternDemo {
         protected Product product = new Product();
 
         public abstract void buildPartA();
+
         public abstract void buildPartB();
+
         public abstract void buildPartC();
 
         // 返回产品对象
@@ -63,9 +65,11 @@ public class BuilderPatternDemo {
             public void buildPartA() {
                 product.setPartA("建造 PartA1");
             }
+
             public void buildPartB() {
                 product.setPartB("建造 PartB1");
             }
+
             public void buildPartC() {
                 product.setPartC("建造 PartC1");
             }
@@ -78,9 +82,11 @@ public class BuilderPatternDemo {
             public void buildPartA() {
                 product.setPartA("建造 PartA2");
             }
+
             public void buildPartB() {
                 product.setPartB("建造 PartB2");
             }
+
             public void buildPartC() {
                 product.setPartC("建造 PartC2");
             }
