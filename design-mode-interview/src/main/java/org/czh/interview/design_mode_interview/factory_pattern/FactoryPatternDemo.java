@@ -1,41 +1,12 @@
 package org.czh.interview.design_mode_interview.factory_pattern;
 
-import org.czh.interview.commons.exceptions.CommonException;
-import org.czh.interview.commons.validate.EmptyAssert;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
-// 汽车 接口
-interface ICar {
-
-    void travel(); // 旅游
-
-    void transport(); // 运输
-
-    // 奥迪 汽车
-    class AoDiCar implements ICar {
-        @Override
-        public void travel() { // 旅游
-            System.out.println("开奥迪车去旅游，安全又快");
-        }
-
-        @Override
-        public void transport() {  // 运输
-            System.out.println("开奥迪车搞运输，赚不够汽油钱");
-        }
-    }
-
-    // 时风四轮拉货 汽车
-    class ShiFengCar implements ICar {
-        @Override
-        public void travel() { // 旅游
-            System.out.println("开时风四轮拉货车去旅游，风吹日晒");
-        }
-
-        @Override
-        public void transport() {  // 运输
-            System.out.println("开时风四轮拉货车搞运输，赚钱满满");
-        }
-    }
-}
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.Arrays;
 
 /**
  * @author : czh
@@ -44,34 +15,77 @@ interface ICar {
  * email 916419307@qq.com
  */
 public class FactoryPatternDemo {
+
     public static void main(String[] args) {
-        // 获取工厂
-        CarFactory carFactory = new CarFactory();
+        IFactory factory1 = new IFactory.ConcreteFactory1();
+        IProduct product1 = factory1.newProduct();
+        product1.show();
 
-        // 生产 奥迪 汽车
-        ICar aoDiCar = carFactory.make("AoDi");
+        IFactory factory2 = new IFactory.ConcreteFactory2();
+        IProduct product2 = factory2.newProduct();
+        product2.show();
 
-        // 开车旅游
-        aoDiCar.travel();
-
-        // 生产 时风四轮拉货 汽车
-        ICar shiFengCar = carFactory.make("ShiFeng");
-
-        // 开车运输
-        shiFengCar.transport();
+        IFactory[] factories = ReadXML.getFactoryFromConfig();
+        assert factories != null;
+        Arrays.stream(factories).forEach(factory -> factory.newProduct().show());
     }
-}
 
-class CarFactory {
-    public ICar make(String name) {
-        EmptyAssert.isNotBlank(name, "请说出要生产的汽车名称");
+    public interface IProduct {
+        void show();
 
-        if ("AoDi".equals(name)) {
-            return new ICar.AoDiCar();
-        } else if ("ShiFeng".equals(name)) {
-            return new ICar.ShiFengCar();
+        class ConcreteProduct1 implements IProduct {
+            @Override
+            public void show() {
+                System.out.println("具体产品1\n");
+            }
         }
 
-        throw new CommonException("还没有配置生产" + name + "这种汽车的生产线");
+        class ConcreteProduct2 implements IProduct {
+            @Override
+            public void show() {
+                System.out.println("具体产品2\n");
+            }
+        }
+    }
+
+    public interface IFactory {
+
+        IProduct newProduct();
+
+        class ConcreteFactory1 implements IFactory {
+            @Override
+            public IProduct newProduct() {
+                System.out.println("具体工厂1 生成 具体产品1");
+                return new IProduct.ConcreteProduct1();
+            }
+        }
+
+        class ConcreteFactory2 implements IFactory {
+            @Override
+            public IProduct newProduct() {
+                System.out.println("具体工厂2 生成 具体产品2");
+                return new IProduct.ConcreteProduct2();
+            }
+        }
+    }
+
+    public static class ReadXML {
+        public static IFactory[] getFactoryFromConfig() {
+            try {
+                DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                Document document = builder.parse(new File("design-mode-interview/src/main/resources/factory_pattern_config.xml"));
+
+                NodeList nodeList = document.getElementsByTagName("className");
+                IFactory[] factories = new IFactory[nodeList.getLength()];
+                for (int i = 0; i < nodeList.getLength(); i++) {
+                    String nodeValue = nodeList.item(i).getFirstChild().getNodeValue().trim();
+                    factories[i] = (IFactory) Class.forName(nodeValue).newInstance();
+                }
+                return factories;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
 }
