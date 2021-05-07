@@ -27,6 +27,8 @@
 
         <junit.version>4.11</junit.version>
         <lombok.version>1.18.10</lombok.version>
+        <org.jetbrains.version>20.1.0</org.jetbrains.version>
+        <swagger-annotations.version>1.6.2</swagger-annotations.version>
 
         <commons-collections4.version>4.4</commons-collections4.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -35,8 +37,8 @@
         <jackson.version>2.12.3</jackson.version>
         <fastjson.version>1.2.76</fastjson.version>
         <json-lib.version>2.4</json-lib.version>
-        <swagger-annotations.version>1.6.2</swagger-annotations.version>
-        <org.jetbrains.version>20.1.0</org.jetbrains.version>
+
+        <cglib.version>3.3.0</cglib.version>
     </properties>
 
     <dependencyManagement>
@@ -126,6 +128,14 @@
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger-annotations.version}</version>
             </dependency>
+
+            <!--代理 start-->
+            <dependency>
+                <groupId>cglib</groupId>
+                <artifactId>cglib</artifactId>
+                <version>${cglib.version}</version>
+            </dependency>
+            <!--代理 end-->
         </dependencies>
     </dependencyManagement>
 
