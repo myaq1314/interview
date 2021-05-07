@@ -1,5 +1,10 @@
 package org.czh.interview.design_mode_interview.singleton_pattern;
 
+// 枚举式
+enum SingletonDict {
+    INSTANCE
+}
+
 /**
  * @author : czh
  * description :
@@ -104,9 +109,4 @@ class HungrySingleton {
     public static HungrySingleton getInstance() {
         return instance;
     }
-}
-
-// 枚举式
-enum SingletonDict {
-    INSTANCE
 }
