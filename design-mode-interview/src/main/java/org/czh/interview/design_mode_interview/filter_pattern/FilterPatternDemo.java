@@ -2,6 +2,7 @@ package org.czh.interview.design_mode_interview.filter_pattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.czh.interview.commons.entity.parent.IBaseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,23 +25,23 @@ public class FilterPatternDemo {
         persons.add(new Person("Mike", "Male", "Single"));
         persons.add(new Person("Bobby", "Male", "Single"));
 
-        ICriteria male = new ICriteria.CriteriaMale();
-        ICriteria female = new ICriteria.CriteriaFemale();
-        ICriteria single = new ICriteria.CriteriaSingle();
-        ICriteria singleMale = new ICriteria.AndCriteria(single, male);
-        ICriteria singleOrFemale = new ICriteria.OrCriteria(single, female);
+        IFilter<Person> male = new IFilter.MaleFilter();
+        IFilter<Person> female = new IFilter.FemaleFilter();
+        IFilter<Person> single = new IFilter.SingleFilter();
+        IFilter<Person> singleAndMale = new IFilter.AndFilter(single, male);
+        IFilter<Person> singleOrFemale = new IFilter.OrFilter(single, female);
 
         System.out.println("Males: ");
-        printPersons(male.meetCriteria(persons));
+        printPersons(male.filter(persons));
 
         System.out.println("\nFemales: ");
-        printPersons(female.meetCriteria(persons));
+        printPersons(female.filter(persons));
 
         System.out.println("\nSingle Males: ");
-        printPersons(singleMale.meetCriteria(persons));
+        printPersons(singleAndMale.filter(persons));
 
         System.out.println("\nSingle Or Females: ");
-        printPersons(singleOrFemale.meetCriteria(persons));
+        printPersons(singleOrFemale.filter(persons));
     }
 
     public static void printPersons(List<Person> persons) {
@@ -53,83 +54,83 @@ public class FilterPatternDemo {
     }
 
     // 抽象过滤器角色
-    public interface ICriteria {
-        List<Person> meetCriteria(List<Person> personList);
+    public interface IFilter<T extends IBaseEntity> {
+        List<T> filter(List<T> sourceList);
 
         // 具体过滤器角色：男性过滤器
-        class CriteriaMale implements ICriteria {
+        class MaleFilter implements IFilter<Person> {
             @Override
-            public List<Person> meetCriteria(List<Person> persons) {
-                List<Person> malePersons = new ArrayList<>();
-                for (Person person : persons) {
-                    if (person.getGender().equalsIgnoreCase("MALE")) {
-                        malePersons.add(person);
+            public List<Person> filter(List<Person> sourceList) {
+                List<Person> targetList = new ArrayList<>();
+                for (Person source : sourceList) {
+                    if ("MALE".equals(source.getGender())) {
+                        targetList.add(source);
                     }
                 }
-                return malePersons;
+                return targetList;
             }
         }
 
         // 具体过滤器角色：女性过滤器
-        class CriteriaFemale implements ICriteria {
+        class FemaleFilter implements IFilter<Person> {
             @Override
-            public List<Person> meetCriteria(List<Person> persons) {
-                List<Person> femalePersons = new ArrayList<>();
-                for (Person person : persons) {
-                    if (person.getGender().equalsIgnoreCase("FEMALE")) {
-                        femalePersons.add(person);
+            public List<Person> filter(List<Person> sourceList) {
+                List<Person> targetList = new ArrayList<>();
+                for (Person source : sourceList) {
+                    if ("Female".equals(source.getGender())) {
+                        targetList.add(source);
                     }
                 }
-                return femalePersons;
+                return targetList;
             }
         }
 
         // 具体过滤器角色：单身过滤器
-        class CriteriaSingle implements ICriteria {
+        class SingleFilter implements IFilter<Person> {
             @Override
-            public List<Person> meetCriteria(List<Person> persons) {
-                List<Person> singlePersons = new ArrayList<>();
-                for (Person person : persons) {
-                    if (person.getMaritalStatus().equalsIgnoreCase("SINGLE")) {
-                        singlePersons.add(person);
+            public List<Person> filter(List<Person> sourceList) {
+                List<Person> targetList = new ArrayList<>();
+                for (Person source : sourceList) {
+                    if ("SINGLE".equals(source.getMaritalStatus())) {
+                        targetList.add(source);
                     }
                 }
-                return singlePersons;
+                return targetList;
             }
         }
 
         // 具体过滤器角色：And组合过滤器
         @AllArgsConstructor
-        class AndCriteria implements ICriteria {
+        class AndFilter implements IFilter<Person> {
 
-            private final ICriteria criteria;
-            private final ICriteria otherCriteria;
+            private final IFilter<Person> criteria;
+            private final IFilter<Person> otherCriteria;
 
             @Override
-            public List<Person> meetCriteria(List<Person> persons) {
-                List<Person> firstCriteriaPersons = criteria.meetCriteria(persons);
-                return otherCriteria.meetCriteria(firstCriteriaPersons);
+            public List<Person> filter(List<Person> sourceList) {
+                List<Person> resultList = criteria.filter(sourceList);
+                return otherCriteria.filter(resultList);
             }
         }
 
         // 具体过滤器角色：Or组合过滤器
         @AllArgsConstructor
-        class OrCriteria implements ICriteria {
+        class OrFilter implements IFilter<Person> {
 
-            private final ICriteria criteria;
-            private final ICriteria otherCriteria;
+            private final IFilter<Person> criteria;
+            private final IFilter<Person> otherCriteria;
 
             @Override
-            public List<Person> meetCriteria(List<Person> persons) {
-                List<Person> firstCriteriaItems = criteria.meetCriteria(persons);
-                List<Person> otherCriteriaItems = otherCriteria.meetCriteria(persons);
+            public List<Person> filter(List<Person> sourceList) {
+                List<Person> result1List = criteria.filter(sourceList);
+                List<Person> result2List = otherCriteria.filter(sourceList);
 
-                for (Person person : otherCriteriaItems) {
-                    if (!firstCriteriaItems.contains(person)) {
-                        firstCriteriaItems.add(person);
+                for (Person person : result2List) {
+                    if (!result1List.contains(person)) {
+                        result1List.add(person);
                     }
                 }
-                return firstCriteriaItems;
+                return result1List;
             }
         }
     }
@@ -137,7 +138,7 @@ public class FilterPatternDemo {
     // 被过滤的角色
     @Getter
     @AllArgsConstructor
-    public static class Person {
+    public static class Person implements IBaseEntity {
 
         private final String name;
         private final String gender;
