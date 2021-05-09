@@ -13,12 +13,14 @@ public class CLHLock {
     private final AtomicReference<CLHNode> tailThreadNode; // 原子级尾节点
     private final ThreadLocal<CLHNode> preThreadNode; // 前继节点
     private final ThreadLocal<CLHNode> currentThreadNode; // 当前节点
+
     public CLHLock() {
         tailThreadNode = new AtomicReference<>(new CLHNode());
         currentThreadNode = ThreadLocal.withInitial(CLHNode::new);
         preThreadNode = new ThreadLocal<>();
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     public void lock() {
         CLHNode currentNode = currentThreadNode.get();
         currentNode.locked = true; // 状态位为等待锁
