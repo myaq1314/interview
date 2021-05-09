@@ -25,6 +25,12 @@
             <artifactId>commons</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--计算引擎 start-->
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+        </dependency>
+        <!--计算引擎 end-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

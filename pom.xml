@@ -34,6 +34,7 @@
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <commons-math3.version>3.6.1</commons-math3.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
+        <antlr4-runtime.version>4.9.2</antlr4-runtime.version>
         <jackson.version>2.12.3</jackson.version>
         <fastjson.version>1.2.76</fastjson.version>
         <json-lib.version>2.4</json-lib.version>
@@ -87,6 +88,13 @@
                 <artifactId>validation-api</artifactId>
                 <version>${validation-api.version}</version>
             </dependency>
+            <!--计算引擎 start-->
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr4-runtime</artifactId>
+                <version>${antlr4-runtime.version}</version>
+            </dependency>
+            <!--计算引擎 end-->
 
             <!--jackson start-->
             <dependency>
