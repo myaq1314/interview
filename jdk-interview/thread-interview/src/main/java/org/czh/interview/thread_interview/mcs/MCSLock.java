@@ -12,6 +12,7 @@ public class MCSLock {
 
     private final ThreadLocal<MCSNode> currentThreadNode; // 当前节点
     private final AtomicReference<MCSNode> tailAtomicNode; // 原子级尾节点
+
     public MCSLock() {
         this.currentThreadNode = ThreadLocal.withInitial(MCSNode::new);
         this.tailAtomicNode = new AtomicReference<>(null);
@@ -23,6 +24,7 @@ public class MCSLock {
         if (preNode != null) {
             currentNode.locked = true;
             preNode.next = currentNode;
+            // noinspection StatementWithEmptyBody
             while (currentNode.locked) {  // true 锁等待，当前节点自旋等待
                 // 自旋当前节点状态位
             }
@@ -37,6 +39,8 @@ public class MCSLock {
         }
 
         if (currentNode.next == null && !tailAtomicNode.compareAndSet(currentNode, null)) {
+
+            // noinspection StatementWithEmptyBody
             while (currentNode.next == null) {
                 // 当前要释放锁的节点，不属于尾节点，但是没有下一节点的情况，自旋等待
             }
