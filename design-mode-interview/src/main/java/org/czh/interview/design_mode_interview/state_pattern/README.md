@@ -21,3 +21,5 @@
 [代码入口](StatePatternDemo.java)
 
 [方便理解，场景代码入口](ThreadStatePatternDemo.java)
+
+[享元模式 + 状态模式，代码入口](FlyweightStatePatternDemo.java)
