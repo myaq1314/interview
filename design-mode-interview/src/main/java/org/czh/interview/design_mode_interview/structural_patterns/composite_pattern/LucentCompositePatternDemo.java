@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.composite_pattern;
+package org.czh.interview.design_mode_interview.structural_patterns.composite_pattern;
 
 import lombok.AllArgsConstructor;
 

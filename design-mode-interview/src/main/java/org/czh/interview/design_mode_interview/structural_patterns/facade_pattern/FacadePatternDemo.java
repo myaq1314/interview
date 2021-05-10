@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.facade_pattern;
+package org.czh.interview.design_mode_interview.structural_patterns.facade_pattern;
 
 /**
  * @author : czh

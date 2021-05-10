@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.proxy_pattern;
+package org.czh.interview.design_mode_interview.structural_patterns.proxy_pattern;
 
 import lombok.AllArgsConstructor;
 import net.sf.cglib.proxy.Enhancer;

@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.filter_pattern;
+package org.czh.interview.design_mode_interview.structural_patterns.filter_pattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

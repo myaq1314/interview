@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.flyweight_pattern;
+package org.czh.interview.design_mode_interview.structural_patterns.flyweight_pattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.bridge_pattern;
+package org.czh.interview.design_mode_interview.structural_patterns.bridge_pattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Setter;
