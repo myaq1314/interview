@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.prototype_pattern;
+package org.czh.interview.design_mode_interview.creational_patterns.prototype_pattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.factory_pattern;
+package org.czh.interview.design_mode_interview.creational_patterns.factory_pattern;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;

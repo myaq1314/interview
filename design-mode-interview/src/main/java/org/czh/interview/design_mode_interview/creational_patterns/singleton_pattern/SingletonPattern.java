@@ -1,4 +1,4 @@
-package org.czh.interview.design_mode_interview.singleton_pattern;
+package org.czh.interview.design_mode_interview.creational_patterns.singleton_pattern;
 
 // 枚举式
 enum SingletonDict {

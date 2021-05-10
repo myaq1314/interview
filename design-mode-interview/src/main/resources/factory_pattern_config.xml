@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <className>
-        org.czh.interview.design_mode_interview.factory_pattern.FactoryPatternDemo$IFactory$ConcreteFactory1
+        org.czh.interview.design_mode_interview.creational_patterns.factory_pattern.FactoryPatternDemo$IFactory$ConcreteFactory1
     </className>
     <className>
-        org.czh.interview.design_mode_interview.factory_pattern.FactoryPatternDemo$IFactory$ConcreteFactory2
+        org.czh.interview.design_mode_interview.creational_patterns.factory_pattern.FactoryPatternDemo$IFactory$ConcreteFactory2
     </className>
 </config>
