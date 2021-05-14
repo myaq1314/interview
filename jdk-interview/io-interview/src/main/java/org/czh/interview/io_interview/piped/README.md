@@ -1,64 +1,17 @@
-## 管道流
+# 管道流
 
-    PipedOutputStream 管道输出流
-    PipedInputStream 管道输入流
+    PipedOutputStream 管道输出流（字节流）-- 数据直接输向管道（PipedInputStream的管道）
+    PipedInputStream 管道输入流（字节流）-- 数据从管道输向程序（本身有管道，数据由PipedOutputStream输入）
+    PipedWriter 管道输出流（字符流）-- 数据直接输向管道（PipedReader的管道）
+    PipedReader 管道输入流（字符流）-- 数据从管道输向程序（本身有管道，数据由PipedWriter输入）
 
     管道输入输出流，配合使用可以实现线程间通信。
+    数据由某个线程写入 输出流（PipedOutputStream/PipedWriter）对象，
+        并由其它线程从连接的 输入流（PipedInputStream/PipedReader）对象 读取。
+    不建议使用一个线程操作两个流，容易造成线程死锁。
 
-### 流程
+## 绑定流程
 
-    建立 管道输出流 out 和 管道输入流 in，
-        PipedOutputStream pos = new PipedOutputStream();
-        PipedInputStream pis = new PipedInputStream();
-    绑定 输入流 和 输出流 
-            out.connect(in);
-        或者是
-            in.connect(out);
-        或者是建立时绑定
-            PipedOutputStream pos = new PipedOutputStream();
-            PipedInputStream pis = new PipedInputStream(pos);
-        或者是
-            PipedInputStream pis = new PipedInputStream();
-            PipedOutputStream pos = new PipedOutputStream(pis);
-    out 中写入的数据则会同步写入的 in 的缓冲区
-        实际情况是，out中写入数据就是往in的缓冲区写数据，out中没有数据缓冲区
+[字节流绑定流程](ThreadPipedStreamLearn.java)
 
-### PipedOutputStream API
-
-    public PipedOutputStream(PipedInputStream snk);
-    public PipedOutputStream();
-
-    public synchronized void connect(PipedInputStream snk);
-        将PipedOutputStream 和 PipedInputSteam绑定
-
-    public void write(int b); 
-        向output写入byte
-    public void write(byte b[], int off, int len); 
-        向output写入字节数组bytes
-
-    public synchronized void flush();
-        刷新缓冲区,通知其他input读取数据
-    public void close();
-        关闭
-
-### PipedInputStream API
-
-    public PipedInputStream(PipedOutputStream src);
-    public PipedInputStream(PipedOutputStream src, int pipeSize);
-
-    public void connect(PipedOutputStream src);
-        将PipedOutputStream 和 PipedInputSteam绑定
-    
-    protected synchronized void receive(int b);
-        向input缓冲区写入b
-    synchronized void receive(byte b[], int off, int len);
-        向input写入字节数组b
-
-    public synchronized int read(); 
-        读取缓冲区下一个字节byte
-    public synchronized int read(byte b[], int off, int len)
-        读取缓冲区字节数组到bytes
-    public synchronized int available();
-        缓冲区可读字节数组的个数
-    public void close();
-        关闭
+[字符流绑定流程](ThreadPipedReaderLearn.java)
