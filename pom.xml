@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>amuse</module>
         <module>commons</module>
         <module>db-interview</module>
         <module>design-mode-interview</module>
