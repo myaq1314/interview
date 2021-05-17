@@ -39,7 +39,7 @@ public class DecoratorPatternDemo {
         // 抽象装饰角色
         @AllArgsConstructor
         class Decorator implements IComponent {
-            private IComponent component;
+            private final IComponent component;
 
             public void operation() {
                 component.operation();
