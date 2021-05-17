@@ -5,6 +5,9 @@ import org.czh.interview.commons.validate.FlagAssert;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -14,6 +17,18 @@ import java.io.IOException;
  * email 916419307@qq.com
  */
 public class StreamUtil {
+
+    public static FileOutputStream outputStream = new FileOutputStream(FileDescriptor.out);
+    public static FileWriter writer = new FileWriter(FileDescriptor.out);
+
+    public static File getIoSourceArray(String sourceName) {
+
+        return StreamUtil.getFile(getIoArrayPath(), sourceName, true);
+    }
+
+    public static File getIoTargetArray(String targetName) {
+        return StreamUtil.getFile(getIoArrayPath(), targetName, false);
+    }
 
     public static File getIoSourceFile(String sourceName) {
 
@@ -28,8 +43,8 @@ public class StreamUtil {
         return "jdk-interview/io-interview/src/main/java/org/czh/interview/io_interview/file/txt";
     }
 
-    public static String getIoByteArrayPath() {
-        return "jdk-interview/io-interview/src/main/java/org/czh/interview/io_interview/byte_array/txt";
+    public static String getIoArrayPath() {
+        return "jdk-interview/io-interview/src/main/java/org/czh/interview/io_interview/array/txt";
     }
 
     public static File getFile(String path, String fileName, boolean exists) {

@@ -1,5 +1,24 @@
 # IO 流
 
+## BIO、NIO、AIO
+
+    1、同步与异步
+
+    同步就是发起一个调用后，被调用者未处理完请求之前，调用不返回。
+    异步就是发起一个调用后，立刻得到被调用者的回应表示已接收到请求，但是被调用者并没有返回结果。
+        此时我们可以处理其他请求，被调用者通常依靠事件、回调等机制来通知调用者其返回结果。
+    区别：异步不需要等待处理结果，被调用者会通过回调等机制来通知调用者其返回结果。
+
+    2、阻塞与非阻塞
+
+    阻塞就是发起一个请求，调用者一直等待请求结果返回，
+        也就是当前线程会被挂起，无法从事其他任务，只有当条件就绪才能继续
+    非阻塞就是发起一个请求，调用者不用一直等着结果返回，可以先去干其他事情。
+
+[BIO](bio/README.md)
+
+### NIO (Non Blocking IO) 同步非阻塞模型
+
 ## 1、概念
 
     流是一组有顺序的，有起点和重点的字节集合，是对数据传输的总称或抽象。
@@ -10,7 +29,7 @@
 
     根据处理数据类型的不同 分为：字符流 和 字节流
     根据数据流向不同 分为：输入流 和 输出流
-    根据功能不同 分为：节点流 和 处理流
+    根据处理对象不同 分为：节点流 和 处理流
 
 ### 2.1、字符流 和 字节流
 
@@ -100,8 +119,8 @@
 |分类|字节输入流|代码示例|字节输出流|代码示例|字符输入流|代码示例|字符输出流|代码示例|
 |:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
 |抽象基类|InputStream|[示例]()|OutputStream|[示例]()|Reader|[示例]()|Writer|[示例]()|
-|访问文件|FileInputStream|[示例]()|FileOutputStream|[示例]()|FileReader|[示例]()|FileWriter|[示例]()|
-|访问数组|ByteArrayInputStream|[示例]()|ByteArrayOutputStream|[示例]()|CharArrayReader|[示例]()|CharArrayWriter|[示例]()|
+|访问文件|FileInputStream|[示例](file/FileStreamLearn.java)|FileOutputStream|[示例](file/FileStreamLearn.java)|FileReader|[示例](file/FileReaderLearn.java)|FileWriter|[示例](file/FileReaderLearn.java)|
+|访问数组|ByteArrayInputStream|[示例](array/ByteArrayStreamLearn.java)|ByteArrayOutputStream|[示例](array/ByteArrayStreamLearn.java)|CharArrayReader|[示例](array/CharArrayStreamLearn.java)|CharArrayWriter|[示例](array/CharArrayStreamLearn.java)|
 |访问管道|PipedInputStream|[示例]()|PipedOutputStream|[示例]()|PipedReader|[示例]()|PipedWriter|[示例]()|
 |访问字符串|StringBufferInputStream|[示例]()| | |StringReader|[示例]()|StringWriter|[示例]()|
 |缓冲流|BufferedInputStream|[示例]()|BufferedOutputStream|[示例]()|BufferedReader|[示例]()|BufferedWriter|[示例]()|
