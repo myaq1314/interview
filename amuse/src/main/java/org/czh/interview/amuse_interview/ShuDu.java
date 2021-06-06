@@ -243,19 +243,30 @@ public class ShuDu {
          */
         private final int id;
         /**
+         * 疑似值Set集合
+         */
+        private final Set<Integer> suspectedSet = new HashSet<>(9);
+        /**
          * 数值，准确值为1-9，空值为0
          */
         private int num;
+        /**
+         * 当前对象所在的行
+         */
+        private Map<Integer, Number> rowMap;
+        /**
+         * 当前对象所在的列
+         */
+        private Map<Integer, Number> columnMap;
+        /**
+         * 当前对象所在的宫
+         */
+        private Map<Integer, Number> gongMap;
 
         public Number(int id, int num) {
             this.id = id;
             this.num = num;
         }
-
-        /**
-         * 疑似值Set集合
-         */
-        private final Set<Integer> suspectedSet = new HashSet<>(9);
 
         /**
          * 清空疑似值Set集合
@@ -316,19 +327,6 @@ public class ShuDu {
                 this.suspectedSet.add(j);
             }
         }
-
-        /**
-         * 当前对象所在的行
-         */
-        private Map<Integer, Number> rowMap;
-        /**
-         * 当前对象所在的列
-         */
-        private Map<Integer, Number> columnMap;
-        /**
-         * 当前对象所在的宫
-         */
-        private Map<Integer, Number> gongMap;
 
         /**
          * toString方法
