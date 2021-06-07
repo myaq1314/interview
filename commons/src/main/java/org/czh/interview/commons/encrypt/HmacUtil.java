@@ -3,14 +3,17 @@ package org.czh.interview.commons.encrypt;
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
+import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
 import org.czh.interview.commons.validate.EqualsAssert;
 import org.czh.interview.commons.validate.FlagAssert;
 
 import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -22,25 +25,24 @@ import java.util.Objects;
  * email 916419307@qq.com
  */
 @SuppressWarnings({"unused", "DuplicatedCode"})
-public final class HmacEncrypt {
+public final class HmacUtil {
 
     public static void main(String[] args) {
-        SecretKey secretKey = getSecretKey();
-        String key = getKey(secretKey);
-        EncryptKeyUtil.writeKey(EncryptConstant.getHmacMD5(), key);
-
-        String key2 = EncryptKeyUtil.readLastKey();
-        System.out.println(key2); // qRSubWiifx9/q/HQffdOGE1jljRe/1BbkEdxEZYOztucPApL1dswCDArlaLo2K5hQg5L3P++iq9W37ekimsYCQ==
-        SecretKey secretKey2 = getSecretKey(key2);
-        EqualsAssert.isEquals(secretKey, secretKey2);
+        String key = SecretKeyUtil.matchReadByLast(EncryptConstant.getHmacMD5());
+        if (key == null) {
+            key = getKey(getSecretKey());
+            SecretKeyUtil.writeKey(EncryptConstant.getHmacMD5(), key);
+        }
+        System.out.println(key); // qRSubWiifx9/q/HQffdOGE1jljRe/1BbkEdxEZYOztucPApL1dswCDArlaLo2K5hQg5L3P++iq9W37ekimsYCQ==
+        SecretKey secretKey = getSecretKey(key);
 
         String src = "123456";
         System.out.println(src); // 123456
 
-        String dst = encodeToString(src, secretKey2);
-        String dst2 = encodeToString(src, secretKey2);
+        String dst = encodeToString(src, secretKey);
+        String dst2 = encodeToString(src, secretKey);
         System.out.println(dst); // 1b589c3a31995afd8aa74d21cfa6287e
-        FlagAssert.isTrue(verify(src, dst, secretKey2));
+        FlagAssert.isTrue(verify(src, dst, secretKey));
         EqualsAssert.isEquals(dst, dst2);
     }
 
@@ -92,7 +94,17 @@ public final class HmacEncrypt {
 
     public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey secretKey) {
         EmptyAssert.isNotEmpty(srcBytes);
-        return EncryptUtil.getHmacMD5(secretKey).doFinal(srcBytes);
+        EmptyAssert.isNotNull(secretKey);
+
+        try {
+            Mac mac = Mac.getInstance(EncryptConstant.getHmacMD5());
+            mac.init(secretKey);
+            return mac.doFinal(srcBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("未知的加密算法");
+        } catch (InvalidKeyException e) {
+            throw new CommonException("无效的公钥");
+        }
     }
 
     /*
@@ -132,12 +144,12 @@ public final class HmacEncrypt {
      */
     private static byte[] keyStringToArray(@NotBlankTag String key) {
         EmptyAssert.isNotBlank(key);
-        return Base64Encrypt.decode(key);
+        return Base64Util.decode(key);
     }
 
     private static String keyArrayToString(@NotEmptyTag byte[] keyBytes) {
         EmptyAssert.isNotEmpty(keyBytes);
-        return Base64Encrypt.encodeToString(keyBytes);
+        return Base64Util.encodeToString(keyBytes);
     }
 
     private static String dstArrayToString(@NotEmptyTag byte[] dstBytes) {

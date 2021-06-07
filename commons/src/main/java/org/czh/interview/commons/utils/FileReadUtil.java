@@ -2,6 +2,7 @@ package org.czh.interview.commons.utils;
 
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.exceptions.CommonException;
+import org.czh.interview.commons.validate.EmptyAssert;
 import org.czh.interview.commons.validate.EmptyValidate;
 
 import java.io.File;
@@ -32,6 +33,44 @@ public final class FileReadUtil {
             }
         } catch (UnsupportedEncodingException e) {
             throw new CommonException("未知的编码方式");
+        }
+    }
+
+    public static String matchReadByLast(@NotBlankTag String path, @NotBlankTag String match) {
+        EmptyAssert.isNotBlank(match);
+
+        File file = FileUtil.readFile(path);
+        try (RandomAccessFile raFile = new RandomAccessFile(file, "r")) {
+            long length = raFile.length();
+            if (length == 0L) {
+                throw new CommonException("没有可读取的数据");
+            }
+
+            // 排除空行
+            long pos = length - 1;
+            while (pos > 0) {
+                while (pos > 0) {
+                    pos--;
+                    raFile.seek(pos);
+                    if (raFile.readByte() == '\n') {
+                        break;
+                    }
+                }
+                if (pos == 0) {
+                    raFile.seek(0);
+                }
+                byte[] bytes = new byte[(int) (length - pos)];
+                raFile.read(bytes);
+                String line = new String(bytes);
+                if (line.contains(match)) {
+                    return line;
+                }
+                length = pos;
+                pos--;
+            }
+            return null;
+        } catch (IOException e) {
+            throw new CommonException("读取文件失败");
         }
     }
 

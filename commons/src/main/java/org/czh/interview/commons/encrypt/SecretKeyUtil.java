@@ -13,7 +13,7 @@ import java.util.Date;
  * date : 2021-06-05
  * email 916419307@qq.com
  */
-public final class EncryptKeyUtil {
+public final class SecretKeyUtil {
 
     private static final String keyFilePath = "./commons/src/main/resources/salt.txt";
 
@@ -35,6 +35,14 @@ public final class EncryptKeyUtil {
 
     public static String readLastKey() {
         String lastLine = FileReadUtil.readLastLine(keyFilePath);
+        return lastLine.substring(lastLine.lastIndexOf("\t") + "\t".length()).trim();
+    }
+
+    public static String matchReadByLast(String match) {
+        String lastLine = FileReadUtil.matchReadByLast(keyFilePath, "\t" + match + "\t");
+        if (lastLine == null) {
+            return null;
+        }
         return lastLine.substring(lastLine.lastIndexOf("\t") + "\t".length()).trim();
     }
 }

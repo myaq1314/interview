@@ -8,9 +8,6 @@ import org.czh.interview.commons.validate.EmptyAssert;
 import org.czh.interview.commons.validate.EqualsAssert;
 import org.czh.interview.commons.validate.FlagAssert;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -29,29 +26,28 @@ import java.util.Objects;
  * email 916419307@qq.com
  */
 @SuppressWarnings({"unused", "DuplicatedCode"})
-public final class DESEncrypt {
+public final class DESUtil {
 
     public static void main(String[] args) {
-        SecretKey secretKey = getSecretKey();
-        String key = getKey(secretKey);
-        EncryptKeyUtil.writeKey(EncryptConstant.getDES(), key);
-
-        String key2 = EncryptKeyUtil.readLastKey();
-        System.out.println(key2); // StnTAeOM/ps=
-        SecretKey secretKey2 = getSecretKey(key2);
-        EqualsAssert.isEquals(secretKey, secretKey2);
+        String key = SecretKeyUtil.matchReadByLast(EncryptConstant.getDES());
+        if (key == null) {
+            key = getKey(getSecretKey());
+            SecretKeyUtil.writeKey(EncryptConstant.getDES(), key);
+        }
+        System.out.println(key); // StnTAeOM/ps=
+        SecretKey secretKey = getSecretKey(key);
 
         String src = "123456";
         System.out.println(src); // 123456
 
-        String dst = encodeToString(src, secretKey2);
-        String dst2 = encodeToString(src, secretKey2);
-        System.out.println(dst); // d8cd95d334fefa45
-        FlagAssert.isTrue(verify(src, dst, secretKey2));
+        String dst = encodeToString(src, secretKey);
+        String dst2 = encodeToString(src, secretKey);
+        System.out.println(dst); // 2M2V0zT++kU=
+        FlagAssert.isTrue(verify(src, dst, secretKey));
         EqualsAssert.isEquals(dst, dst2);
 
-        String src2 = decodeToString(dst, secretKey2);
-        String src3 = decodeToString(dst, secretKey2);
+        String src2 = decodeToString(dst, secretKey);
+        String src3 = decodeToString(dst, secretKey);
         System.out.println(src); // 123456
         EqualsAssert.isEquals(src, src2);
         EqualsAssert.isEquals(src2, src3);
@@ -75,7 +71,7 @@ public final class DESEncrypt {
             SecretKeyFactory factory = SecretKeyFactory.getInstance(EncryptConstant.getDES());
             return factory.generateSecret(new DESKeySpec(secretKey.getEncoded()));
         } catch (NoSuchAlgorithmException e) {
-            throw new CommonException("未知的编码方式");
+            throw new CommonException("未知的加密方式");
         } catch (InvalidKeyException | InvalidKeySpecException e) {
             throw new CommonException("无效的公钥");
         }
@@ -91,7 +87,7 @@ public final class DESEncrypt {
      */
 
     public static String encodeToString(@NotBlankTag String src, @NotNullTag SecretKey secretKey) {
-        return dstArrayToString(encode(src, secretKey));
+        return encodeToString(srcStringToArray(src), secretKey);
     }
 
     public static String encodeToString(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey secretKey) {
@@ -103,16 +99,7 @@ public final class DESEncrypt {
     }
 
     public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey secretKey) {
-        EmptyAssert.isNotEmpty(srcBytes);
-
-        try {
-            Cipher cipher = EncryptUtil.getDESCipher(Cipher.ENCRYPT_MODE, secretKey);
-            return cipher.doFinal(srcBytes);
-        } catch (BadPaddingException e) {
-            throw new CommonException("未知的编码方式");
-        } catch (IllegalBlockSizeException e) {
-            throw new CommonException("无效的源字符串");
-        }
+        return CipherUtil.doFinalEncode(srcBytes, EncryptConstant.getDESCipher(), secretKey);
     }
 
     /*
@@ -132,16 +119,7 @@ public final class DESEncrypt {
     }
 
     public static byte[] decode(@NotEmptyTag byte[] dstBytes, @NotNullTag SecretKey secretKey) {
-        EmptyAssert.isNotEmpty(dstBytes);
-
-        try {
-            Cipher cipher = EncryptUtil.getDESCipher(Cipher.DECRYPT_MODE, secretKey);
-            return cipher.doFinal(dstBytes);
-        } catch (BadPaddingException e) {
-            throw new CommonException("未知的编码方式");
-        } catch (IllegalBlockSizeException e) {
-            throw new CommonException("无效的源字符串");
-        }
+        return CipherUtil.doFinalDecode(dstBytes, EncryptConstant.getDESCipher(), secretKey);
     }
 
     /*
@@ -180,12 +158,12 @@ public final class DESEncrypt {
      */
     private static byte[] keyStringToArray(@NotBlankTag String key) {
         EmptyAssert.isNotBlank(key);
-        return Base64Encrypt.decode(key);
+        return Base64Util.decode(key);
     }
 
     private static String keyArrayToString(@NotEmptyTag byte[] keyBytes) {
         EmptyAssert.isNotEmpty(keyBytes);
-        return Base64Encrypt.encodeToString(keyBytes);
+        return Base64Util.encodeToString(keyBytes);
     }
 
     private static byte[] srcStringToArray(@NotBlankTag String src) {
@@ -200,11 +178,11 @@ public final class DESEncrypt {
 
     private static byte[] dstStringToArray(@NotBlankTag String dst) {
         EmptyAssert.isNotBlank(dst);
-        return Base64Encrypt.decode(dst);
+        return Base64Util.decode(dst);
     }
 
     private static String dstArrayToString(@NotEmptyTag byte[] dstBytes) {
         EmptyAssert.isNotEmpty(dstBytes);
-        return Base64Encrypt.encodeToString(dstBytes);
+        return Base64Util.encodeToString(dstBytes);
     }
 }

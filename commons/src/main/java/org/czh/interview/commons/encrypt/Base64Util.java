@@ -17,7 +17,7 @@ import java.util.Objects;
  * email 916419307@qq.com
  */
 @SuppressWarnings("unused")
-public final class Base64Encrypt {
+public final class Base64Util {
 
     public static void main(String[] args) {
         String src = "123456";

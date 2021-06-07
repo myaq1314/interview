@@ -52,8 +52,25 @@ public final class EncryptConstant {
         return "PBEWITHMD5andDES";
     }
 
+    public static String getRSAPublicKey() {
+        return "RSAPublicKey";
+    }
+
+    public static String getRSAPrivateKey() {
+        return "RSAPrivateKey";
+    }
+
+    public static String getRSA() {
+        return "RSA";
+    }
+
+    public static String getRSACipher() {
+        return "RSA";
+    }
+
 
     @AllArgsConstructor
+
     public enum SHAType implements IKeyEnum<String> {
         SHA_1("SHA-1"), // 40位 适用范围 不超过 2^64 二进制位
         SHA_224("SHA-224"), // 56位 适用范围 不超过 2^64 二进制位

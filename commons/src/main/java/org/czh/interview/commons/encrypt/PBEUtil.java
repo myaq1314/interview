@@ -4,19 +4,16 @@ import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
 import org.czh.interview.commons.exceptions.CommonException;
+import org.czh.interview.commons.utils.RandomUtil;
 import org.czh.interview.commons.validate.EmptyAssert;
 import org.czh.interview.commons.validate.EqualsAssert;
 import org.czh.interview.commons.validate.FlagAssert;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
@@ -29,30 +26,31 @@ import java.util.Objects;
  * email 916419307@qq.com
  */
 @SuppressWarnings("unused")
-public final class PBEEncrypt {
+public final class PBEUtil {
 
     public static void main(String[] args) {
+        String salt = SecretKeyUtil.matchReadByLast(EncryptConstant.getPBE());
+        if (salt == null) {
+            salt = getSaltString();
+            SecretKeyUtil.writeKey(EncryptConstant.getPBE(), salt);
+        }
+        System.out.println(salt); // QTrAtWy+FV4=
+        AlgorithmParameterSpec algParamSpec = getAlgParamSpec(salt);
+
         String password = "password";
-        Key key = getKey(password);
-
-        String saltString = getSaltString();
-        EncryptKeyUtil.writeKey(EncryptConstant.getPBE(), saltString);
-
-        String saltString2 = EncryptKeyUtil.readLastKey();
-        System.out.println(saltString2); // 4xT6HDtDSjM=
-        AlgorithmParameterSpec algParamSpec = getAlgParamSpec(saltString2);
+        SecretKey secretKey = getSecretKey(password);
 
         String src = "123456";
         System.out.println(src); // 123456
 
-        String dst = encodeToString(src, key, algParamSpec);
-        String dst2 = encodeToString(src, key, algParamSpec);
-        System.out.println(dst); // sM3bYV6JutM=
-        FlagAssert.isTrue(verify(src, dst, key, algParamSpec));
+        String dst = encodeToString(src, secretKey, algParamSpec);
+        String dst2 = encodeToString(src, secretKey, algParamSpec);
+        System.out.println(dst); // DRBP6VK8iY8=
+        FlagAssert.isTrue(verify(src, dst, secretKey, algParamSpec));
         EqualsAssert.isEquals(dst, dst2);
 
-        String src2 = decodeToString(dst, key, algParamSpec);
-        String src3 = decodeToString(dst, key, algParamSpec);
+        String src2 = decodeToString(dst, secretKey, algParamSpec);
+        String src3 = decodeToString(dst, secretKey, algParamSpec);
         System.out.println(src); // 123456
         EqualsAssert.isEquals(src, src2);
         EqualsAssert.isEquals(src2, src3);
@@ -66,18 +64,18 @@ public final class PBEEncrypt {
     }
 
     public static String getSaltString(@NotEmptyTag byte[] saltBytes) {
-        EmptyAssert.isNotEmpty(saltBytes);
-        return Base64Encrypt.encodeToString(saltBytes);
+        return saltArrayToString(saltBytes);
     }
 
     public static byte[] getSaltArray() {
-        SecureRandom random = new SecureRandom();
-        return random.generateSeed(8);
+//        SecureRandom random = new SecureRandom();
+//        return random.generateSeed(8);
+        String salt = RandomUtil.getHexRandomByArray(null, 4, 4);
+        return salt.getBytes();
     }
 
     public static byte[] getSaltArray(@NotBlankTag String saltString) {
-        EmptyAssert.isNotBlank(saltString);
-        return Base64Encrypt.decode(saltString);
+        return saltStringToArray(saltString);
     }
 
     public static AlgorithmParameterSpec getAlgParamSpec() {
@@ -94,10 +92,10 @@ public final class PBEEncrypt {
     }
 
     /*
-        使用口令，获取 公钥
+        使用口令，获取 密钥
      */
 
-    public static Key getKey(@NotBlankTag String password) {
+    public static SecretKey getSecretKey(@NotBlankTag String password) {
         EmptyAssert.isNotBlank(password);
 
         try {
@@ -105,7 +103,7 @@ public final class PBEEncrypt {
             SecretKeyFactory factory = SecretKeyFactory.getInstance(EncryptConstant.getPBECipher());
             return factory.generateSecret(pbeKeySpec);
         } catch (NoSuchAlgorithmException e) {
-            throw new CommonException("未知的编码方式");
+            throw new CommonException("未知的加密方式");
         } catch (InvalidKeySpecException e) {
             throw new CommonException("无效的公钥");
         }
@@ -116,36 +114,27 @@ public final class PBEEncrypt {
      */
 
     public static String encodeToString(@NotBlankTag String src,
-                                        @NotNullTag Key key,
+                                        @NotNullTag SecretKey secretKey,
                                         @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        return dstArrayToString(encode(src, key, algParamSpec));
+        return dstArrayToString(encode(src, secretKey, algParamSpec));
     }
 
     public static String encodeToString(@NotEmptyTag byte[] srcBytes,
-                                        @NotNullTag Key key,
+                                        @NotNullTag SecretKey secretKey,
                                         @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        return dstArrayToString(encode(srcBytes, key, algParamSpec));
+        return dstArrayToString(encode(srcBytes, secretKey, algParamSpec));
     }
 
     public static byte[] encode(@NotBlankTag String src,
-                                @NotNullTag Key key,
+                                @NotNullTag SecretKey secretKey,
                                 @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        return encode(srcStringToArray(src), key, algParamSpec);
+        return encode(srcStringToArray(src), secretKey, algParamSpec);
     }
 
     public static byte[] encode(@NotEmptyTag byte[] srcBytes,
-                                @NotNullTag Key key,
+                                @NotNullTag SecretKey secretKey,
                                 @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        EmptyAssert.isNotEmpty(srcBytes);
-
-        try {
-            Cipher cipher = EncryptUtil.getPBECipher(Cipher.ENCRYPT_MODE, key, algParamSpec);
-            return cipher.doFinal(srcBytes);
-        } catch (BadPaddingException e) {
-            throw new CommonException("未知的编码方式");
-        } catch (IllegalBlockSizeException e) {
-            throw new CommonException("无效的源字符串");
-        }
+        return CipherUtil.doFinalEncode(srcBytes, EncryptConstant.getPBECipher(), secretKey, algParamSpec);
     }
 
     /*
@@ -153,36 +142,27 @@ public final class PBEEncrypt {
      */
 
     public static String decodeToString(@NotBlankTag String dst,
-                                        @NotNullTag Key key,
+                                        @NotNullTag SecretKey secretKey,
                                         @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        return decodeToString(dstStringToArray(dst), key, algParamSpec);
+        return decodeToString(dstStringToArray(dst), secretKey, algParamSpec);
     }
 
     public static String decodeToString(@NotEmptyTag byte[] dstBytes,
-                                        @NotNullTag Key key,
+                                        @NotNullTag SecretKey secretKey,
                                         @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        return srcArrayToString(decode(dstBytes, key, algParamSpec));
+        return srcArrayToString(decode(dstBytes, secretKey, algParamSpec));
     }
 
     public static byte[] decode(@NotBlankTag String dst,
-                                @NotNullTag Key key,
+                                @NotNullTag SecretKey secretKey,
                                 @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        return decode(dstStringToArray(dst), key, algParamSpec);
+        return decode(dstStringToArray(dst), secretKey, algParamSpec);
     }
 
     public static byte[] decode(@NotEmptyTag byte[] dstBytes,
-                                @NotNullTag Key key,
+                                @NotNullTag SecretKey secretKey,
                                 @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        EmptyAssert.isNotEmpty(dstBytes);
-
-        try {
-            Cipher cipher = EncryptUtil.getPBECipher(Cipher.DECRYPT_MODE, key, algParamSpec);
-            return cipher.doFinal(dstBytes);
-        } catch (BadPaddingException e) {
-            throw new CommonException("未知的编码方式");
-        } catch (IllegalBlockSizeException e) {
-            throw new CommonException("无效的源字符串");
-        }
+        return CipherUtil.doFinalDecode(dstBytes, EncryptConstant.getPBECipher(), secretKey, algParamSpec);
     }
 
     /*
@@ -190,39 +170,49 @@ public final class PBEEncrypt {
      */
     public static boolean verify(@NotBlankTag String src,
                                  @NotBlankTag String dst,
-                                 @NotNullTag Key key,
+                                 @NotNullTag SecretKey secretKey,
                                  @NotNullTag AlgorithmParameterSpec algParamSpec) {
         EmptyAssert.isNotBlank(dst);
-        return Objects.equals(encodeToString(src, key, algParamSpec), dst);
+        return Objects.equals(encodeToString(src, secretKey, algParamSpec), dst);
     }
 
     public static boolean verify(@NotBlankTag String src,
                                  @NotEmptyTag byte[] dstBytes,
-                                 @NotNullTag Key key,
+                                 @NotNullTag SecretKey secretKey,
                                  @NotNullTag AlgorithmParameterSpec algParamSpec) {
         EmptyAssert.isNotEmpty(dstBytes);
-        return Arrays.equals(encode(src, key, algParamSpec), dstBytes);
+        return Arrays.equals(encode(src, secretKey, algParamSpec), dstBytes);
     }
 
     public static boolean verify(@NotEmptyTag byte[] srcBytes,
                                  @NotBlankTag String dst,
-                                 @NotNullTag Key key,
+                                 @NotNullTag SecretKey secretKey,
                                  @NotNullTag AlgorithmParameterSpec algParamSpec) {
         EmptyAssert.isNotBlank(dst);
-        return Objects.equals(encodeToString(srcBytes, key, algParamSpec), dst);
+        return Objects.equals(encodeToString(srcBytes, secretKey, algParamSpec), dst);
     }
 
     public static boolean verify(@NotEmptyTag byte[] srcBytes,
                                  @NotEmptyTag byte[] dstBytes,
-                                 @NotNullTag Key key,
+                                 @NotNullTag SecretKey secretKey,
                                  @NotNullTag AlgorithmParameterSpec algParamSpec) {
         EmptyAssert.isNotEmpty(dstBytes);
-        return Arrays.equals(encode(srcBytes, key, algParamSpec), dstBytes);
+        return Arrays.equals(encode(srcBytes, secretKey, algParamSpec), dstBytes);
     }
 
     /*
         字节数组 与 字符串 互转
      */
+
+    public static byte[] saltStringToArray(@NotBlankTag String salt) {
+        EmptyAssert.isNotBlank(salt);
+        return Base64Util.decode(salt);
+    }
+
+    public static String saltArrayToString(@NotEmptyTag byte[] saltBytes) {
+        EmptyAssert.isNotEmpty(saltBytes);
+        return Base64Util.encodeToString(saltBytes);
+    }
 
     private static byte[] srcStringToArray(@NotBlankTag String src) {
         EmptyAssert.isNotBlank(src);
@@ -236,11 +226,11 @@ public final class PBEEncrypt {
 
     private static byte[] dstStringToArray(@NotBlankTag String dst) {
         EmptyAssert.isNotBlank(dst);
-        return Base64Encrypt.decode(dst);
+        return Base64Util.decode(dst);
     }
 
     private static String dstArrayToString(@NotEmptyTag byte[] dstBytes) {
         EmptyAssert.isNotEmpty(dstBytes);
-        return Base64Encrypt.encodeToString(dstBytes);
+        return Base64Util.encodeToString(dstBytes);
     }
 }

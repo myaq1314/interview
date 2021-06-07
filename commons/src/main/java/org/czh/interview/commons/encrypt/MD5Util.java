@@ -9,6 +9,7 @@ import org.czh.interview.commons.validate.EqualsAssert;
 import org.czh.interview.commons.validate.FlagAssert;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 /**
@@ -18,29 +19,29 @@ import java.util.Objects;
  * email 916419307@qq.com
  */
 @SuppressWarnings({"unused"})
-public final class MD5Encrypt {
+public final class MD5Util {
 
     public static void main(String[] args) {
-        String salt = getSalt(16);
-        EncryptKeyUtil.writeKey(EncryptConstant.getMD5(), salt);
-
-        String salt2 = EncryptKeyUtil.readLastKey();
-        System.out.println(salt2); // f2f3b657310a4e30 16位
-        EqualsAssert.isEquals(salt, salt2);
+        String salt = SecretKeyUtil.matchReadByLast(EncryptConstant.getMD5());
+        if (salt == null) {
+            salt = getSalt(16);
+            SecretKeyUtil.writeKey(EncryptConstant.getMD5(), salt);
+        }
+        System.out.println(salt); // f2f3b657310a4e30 16位
 
         String src = "123456";
         System.out.println(src); // 123456
 
-        String dst32 = encode32(src, salt2);
-        String dst322 = encode32(src, salt2);
+        String dst32 = encode32(src, salt);
+        String dst322 = encode32(src, salt);
         System.out.println(dst32); // 2a54aaaf9d6a56f14bcb9a08e84ee7be
-        FlagAssert.isTrue(verify32(src, dst32, salt2));
+        FlagAssert.isTrue(verify32(src, dst32, salt));
         EqualsAssert.isEquals(dst32, dst322);
 
-        String dst16 = encode16(src, salt2);
-        String dst162 = encode16(src, salt2);
+        String dst16 = encode16(src, salt);
+        String dst162 = encode16(src, salt);
         System.out.println(dst16); // 9d6a56f14bcb9a08
-        FlagAssert.isTrue(verify16(src, dst16, salt2));
+        FlagAssert.isTrue(verify16(src, dst16, salt));
         EqualsAssert.isEquals(dst16, dst162);
     }
 
@@ -96,10 +97,13 @@ public final class MD5Encrypt {
      * @return 内容密文
      */
     public static String encode32(@NotBlankTag String src, String salt) {
-        byte[] srcBytes = srcStringToArray(src, salt);
-        MessageDigest md5 = EncryptUtil.getMD5();
-        md5.update(srcBytes);
-        return dstArrayToString(md5.digest());
+        try {
+            MessageDigest md5 = MessageDigest.getInstance(EncryptConstant.getMD5());
+            md5.update(srcStringToArray(src, salt));
+            return dstArrayToString(md5.digest());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("未知的加密算法");
+        }
     }
 
     /*
