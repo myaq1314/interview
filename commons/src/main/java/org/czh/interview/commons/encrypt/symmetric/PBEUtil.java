@@ -1,13 +1,13 @@
-package org.czh.interview.commons.encrypt;
+package org.czh.interview.commons.encrypt.symmetric;
 
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
+import org.czh.interview.commons.encrypt.CipherUtil;
+import org.czh.interview.commons.encrypt.EncryptConstant;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.utils.RandomUtil;
 import org.czh.interview.commons.validate.EmptyAssert;
-import org.czh.interview.commons.validate.EqualsAssert;
-import org.czh.interview.commons.validate.FlagAssert;
 
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -27,34 +27,6 @@ import java.util.Objects;
  */
 @SuppressWarnings("unused")
 public final class PBEUtil {
-
-    public static void main(String[] args) {
-        String salt = SecretKeyUtil.matchReadByLast(EncryptConstant.getPBE());
-        if (salt == null) {
-            salt = getSaltString();
-            SecretKeyUtil.writeKey(EncryptConstant.getPBE(), salt);
-        }
-        System.out.println(salt); // QTrAtWy+FV4=
-        AlgorithmParameterSpec algParamSpec = getAlgParamSpec(salt);
-
-        String password = "password";
-        SecretKey secretKey = getSecretKey(password);
-
-        String src = "123456";
-        System.out.println(src); // 123456
-
-        String dst = encodeToString(src, secretKey, algParamSpec);
-        String dst2 = encodeToString(src, secretKey, algParamSpec);
-        System.out.println(dst); // DRBP6VK8iY8=
-        FlagAssert.isTrue(verify(src, dst, secretKey, algParamSpec));
-        EqualsAssert.isEquals(dst, dst2);
-
-        String src2 = decodeToString(dst, secretKey, algParamSpec);
-        String src3 = decodeToString(dst, secretKey, algParamSpec);
-        System.out.println(src); // 123456
-        EqualsAssert.isEquals(src, src2);
-        EqualsAssert.isEquals(src2, src3);
-    }
 
     /*
         获取盐

@@ -1,10 +1,8 @@
-package org.czh.interview.commons.encrypt;
+package org.czh.interview.commons.encrypt.symmetric;
 
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.validate.EmptyAssert;
-import org.czh.interview.commons.validate.EqualsAssert;
-import org.czh.interview.commons.validate.FlagAssert;
 
 import java.util.Arrays;
 import java.util.Base64;
@@ -18,20 +16,6 @@ import java.util.Objects;
  */
 @SuppressWarnings("unused")
 public final class Base64Util {
-
-    public static void main(String[] args) {
-        String src = "123456";
-        System.out.println(src); // 123456
-
-        String dst = encodeToString(src);
-        String dst2 = encodeToString(src);
-        System.out.println(dst); // MTIzNDU2
-        EqualsAssert.isEquals(dst, dst2);
-
-        String src2 = decodeToString(dst);
-        EqualsAssert.isEquals(src, src2);
-        FlagAssert.isTrue(verify(src, dst));
-    }
 
     /*
         加密

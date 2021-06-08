@@ -1,16 +1,15 @@
-package org.czh.interview.commons.encrypt;
+package org.czh.interview.commons.encrypt.asymmetric;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections4.map.HashedMap;
 import org.czh.interview.commons.annotations.tag.MinTag;
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
-import org.czh.interview.commons.convertor.MapConvertor;
+import org.czh.interview.commons.encrypt.CipherUtil;
+import org.czh.interview.commons.encrypt.EncryptConstant;
+import org.czh.interview.commons.encrypt.symmetric.Base64Util;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
-import org.czh.interview.commons.validate.EqualsAssert;
 import org.czh.interview.commons.validate.FlagAssert;
 
 import java.security.Key;
@@ -39,74 +38,13 @@ import java.util.Objects;
  */
 public final class RSAUtil {
 
-    public static void main(String[] args) {
-        String keys = SecretKeyUtil.matchReadByLast(EncryptConstant.getRSA());
-        String publicKeyString;
-        String privateKeyString;
-        if (keys != null) {
-            JSONObject jsonObject = JSON.parseObject(keys);
-            publicKeyString = jsonObject.getString(EncryptConstant.getRSAPublicKey());
-            privateKeyString = jsonObject.getString(EncryptConstant.getRSAPrivateKey());
-        } else {
-            Map<String, String> keyMap = queryKeyStringMap(512);
-            SecretKeyUtil.writeKey(EncryptConstant.getRSA(), MapConvertor.convertToJsonString(keyMap));
-            publicKeyString = keyMap.get(EncryptConstant.getRSAPublicKey());
-            privateKeyString = keyMap.get(EncryptConstant.getRSAPrivateKey());
-        }
-        System.out.println(publicKeyString); // MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKAUgLufFBpHXoDwDgsbtY3B7ICdmH6w7kDZBpe+7jbwWvtxP3V71pFY8bKb5i+/G5HsNLgsY7EQJ1uYLmqlc3kCAwEAAQ==
-        System.out.println(privateKeyString); // MIIBVQIBADANBgkqhkiG9w0BAQEFAASCAT8wggE7AgEAAkEAoBSAu58UGkdegPAOCxu1jcHsgJ2YfrDuQNkGl77uNvBa+3E/dXvWkVjxspvmL78bkew0uCxjsRAnW5guaqVzeQIDAQABAkAjWWO0CsTdqLTttBTlzxCgZRpcrHBoSZnTKBmUmMzxxHaW4KlpwDlmD1y34Y3z/R6O1E4PRTUiHeR/2bR8PUwBAiEA97lBw0zP2Ry41+pCTbedNfy/wExuf6T9cVZ65j5ebrECIQClbaTLpb3oHgFFqmEiWRYbJZwF+ef7+Z9mq5E/SzzTSQIhAOuOX3hEXAgJhcLaYL3h8T3a3sMOaqw5yT2yjB7QA5+hAiBtUgi+X3ghJXr3u8FW/oJCTFdQB7cLaAmzwptItYKrqQIhAOqzhZ/4Bi4IZgD5bJPZhvq1iD4JEVbXsa4r6qBjyJNi
-        PublicKey publicKey = getPublicKey(publicKeyString);
-        PrivateKey privateKey = getPrivateKey(privateKeyString);
-
-        String src = "123456";
-        System.out.println(src); // 123456
-
-        /*
-            公钥加密，私钥解密
-            公钥加密，每次密文都不一样
-         */
-        String dst1 = encodeToString(src, publicKey);
-        System.out.println(dst1); // fONmPyqYkGjr1mtdXHk0oznHP+K4IlT7u6k83QV0v/XsDg876uBLSO+L4NA2QYGIH8chIaFtAY1WJ5mUoL3b/w==
-        // 公钥加密，此处只能使用私钥解密
-        String src1 = decodeToString(dst1, privateKey);
-        EqualsAssert.isEquals(src, src1);
-        FlagAssert.isTrue(verify(src1, dst1, privateKey));
-
-        String dst2 = encodeToString(src, publicKey);
-        System.out.println(dst2); // YpBgzX5ok+xW9lL3guEVgeIIiYWBM6Joz3W1NxHqAM46HUAodezs3YIgp53sblSJvAv4XvQUShWZ5jEUxZxnTQ==
-        // 公钥加密，此处只能使用私钥解密
-        String src2 = decodeToString(dst2, privateKey);
-        EqualsAssert.isEquals(src, src2);
-        FlagAssert.isTrue(verify(src2, dst2, privateKey));
-
-        /*
-            私钥加密，公钥解密
-            私钥加密，每次密文都一样
-         */
-        String dst3 = encodeToString(src, privateKey);
-        System.out.println(dst3); // KSXXh+AqHO9x3kalnQea0DBxi/d5W5Cb864UN1FD3WvIWvi4QLKA07Txg7bhxt+/VHRtlds4S6sme30PhfzvBQ==
-        // 私钥加密，此处只能使用公钥解密
-        String src3 = decodeToString(dst3, publicKey);
-        EqualsAssert.isEquals(src, src3);
-        FlagAssert.isTrue(verify(src3, dst3, publicKey));
-
-        String dst4 = encodeToString(src, privateKey);
-        System.out.println(dst4); // KSXXh+AqHO9x3kalnQea0DBxi/d5W5Cb864UN1FD3WvIWvi4QLKA07Txg7bhxt+/VHRtlds4S6sme30PhfzvBQ==
-        // 私钥加密，此处只能使用公钥解密
-        String src4 = decodeToString(dst4, publicKey);
-        EqualsAssert.isEquals(src, src4);
-        FlagAssert.isTrue(verify(src4, dst4, publicKey));
-    }
-
-    /*
-        获取 公钥、私钥
+    /**
+     * 获取公钥、私钥
+     *
+     * @param keySize 密钥长度，必须是64的倍数，范围在512到65536之间，默认 1024
+     * @return RSAPrivateKey 私钥Key；RSAPublicKey 公钥Key
      */
-
-    public static Map<String, String> queryKeyStringMap() {
-        return queryKeyStringMap(1024);
-    }
-
-    public static Map<String, String> queryKeyStringMap(@MinTag(1) int keySize) {
+    public static Map<String, String> queryKeyMap(@MinTag(1) int keySize) {
         FlagAssert.isTrue(keySize > 0);
 
         Map<String, String> keyMap = new HashedMap<>(2);

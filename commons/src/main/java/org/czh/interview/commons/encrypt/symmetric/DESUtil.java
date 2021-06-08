@@ -1,12 +1,12 @@
-package org.czh.interview.commons.encrypt;
+package org.czh.interview.commons.encrypt.symmetric;
 
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
+import org.czh.interview.commons.encrypt.CipherUtil;
+import org.czh.interview.commons.encrypt.EncryptConstant;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
-import org.czh.interview.commons.validate.EqualsAssert;
-import org.czh.interview.commons.validate.FlagAssert;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -27,31 +27,6 @@ import java.util.Objects;
  */
 @SuppressWarnings({"unused", "DuplicatedCode"})
 public final class DESUtil {
-
-    public static void main(String[] args) {
-        String key = SecretKeyUtil.matchReadByLast(EncryptConstant.getDES());
-        if (key == null) {
-            key = getKey(getSecretKey());
-            SecretKeyUtil.writeKey(EncryptConstant.getDES(), key);
-        }
-        System.out.println(key); // StnTAeOM/ps=
-        SecretKey secretKey = getSecretKey(key);
-
-        String src = "123456";
-        System.out.println(src); // 123456
-
-        String dst = encodeToString(src, secretKey);
-        String dst2 = encodeToString(src, secretKey);
-        System.out.println(dst); // 2M2V0zT++kU=
-        FlagAssert.isTrue(verify(src, dst, secretKey));
-        EqualsAssert.isEquals(dst, dst2);
-
-        String src2 = decodeToString(dst, secretKey);
-        String src3 = decodeToString(dst, secretKey);
-        System.out.println(src); // 123456
-        EqualsAssert.isEquals(src, src2);
-        EqualsAssert.isEquals(src2, src3);
-    }
 
     /*
         获取公钥

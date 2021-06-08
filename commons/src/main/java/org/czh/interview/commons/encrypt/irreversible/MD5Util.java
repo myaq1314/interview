@@ -1,12 +1,11 @@
-package org.czh.interview.commons.encrypt;
+package org.czh.interview.commons.encrypt.irreversible;
 
 import org.czh.interview.commons.annotations.tag.MinTag;
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
+import org.czh.interview.commons.encrypt.EncryptConstant;
 import org.czh.interview.commons.utils.RandomUtil;
 import org.czh.interview.commons.validate.EmptyAssert;
-import org.czh.interview.commons.validate.EqualsAssert;
-import org.czh.interview.commons.validate.FlagAssert;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,30 +19,6 @@ import java.util.Objects;
  */
 @SuppressWarnings({"unused"})
 public final class MD5Util {
-
-    public static void main(String[] args) {
-        String salt = SecretKeyUtil.matchReadByLast(EncryptConstant.getMD5());
-        if (salt == null) {
-            salt = getSalt(16);
-            SecretKeyUtil.writeKey(EncryptConstant.getMD5(), salt);
-        }
-        System.out.println(salt); // f2f3b657310a4e30 16位
-
-        String src = "123456";
-        System.out.println(src); // 123456
-
-        String dst32 = encode32(src, salt);
-        String dst322 = encode32(src, salt);
-        System.out.println(dst32); // 2a54aaaf9d6a56f14bcb9a08e84ee7be
-        FlagAssert.isTrue(verify32(src, dst32, salt));
-        EqualsAssert.isEquals(dst32, dst322);
-
-        String dst16 = encode16(src, salt);
-        String dst162 = encode16(src, salt);
-        System.out.println(dst16); // 9d6a56f14bcb9a08
-        FlagAssert.isTrue(verify16(src, dst16, salt));
-        EqualsAssert.isEquals(dst16, dst162);
-    }
 
     /**
      * 获取 盐

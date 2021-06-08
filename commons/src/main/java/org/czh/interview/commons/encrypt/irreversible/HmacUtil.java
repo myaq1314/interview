@@ -1,12 +1,12 @@
-package org.czh.interview.commons.encrypt;
+package org.czh.interview.commons.encrypt.irreversible;
 
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
+import org.czh.interview.commons.encrypt.EncryptConstant;
+import org.czh.interview.commons.encrypt.symmetric.Base64Util;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
-import org.czh.interview.commons.validate.EqualsAssert;
-import org.czh.interview.commons.validate.FlagAssert;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
@@ -26,25 +26,6 @@ import java.util.Objects;
  */
 @SuppressWarnings({"unused", "DuplicatedCode"})
 public final class HmacUtil {
-
-    public static void main(String[] args) {
-        String key = SecretKeyUtil.matchReadByLast(EncryptConstant.getHmacMD5());
-        if (key == null) {
-            key = getKey(getSecretKey());
-            SecretKeyUtil.writeKey(EncryptConstant.getHmacMD5(), key);
-        }
-        System.out.println(key); // qRSubWiifx9/q/HQffdOGE1jljRe/1BbkEdxEZYOztucPApL1dswCDArlaLo2K5hQg5L3P++iq9W37ekimsYCQ==
-        SecretKey secretKey = getSecretKey(key);
-
-        String src = "123456";
-        System.out.println(src); // 123456
-
-        String dst = encodeToString(src, secretKey);
-        String dst2 = encodeToString(src, secretKey);
-        System.out.println(dst); // 1b589c3a31995afd8aa74d21cfa6287e
-        FlagAssert.isTrue(verify(src, dst, secretKey));
-        EqualsAssert.isEquals(dst, dst2);
-    }
 
     /*
         获取 公钥

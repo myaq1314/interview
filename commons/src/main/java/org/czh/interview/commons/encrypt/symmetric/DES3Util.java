@@ -1,55 +1,32 @@
-package org.czh.interview.commons.encrypt;
+package org.czh.interview.commons.encrypt.symmetric;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
+import org.czh.interview.commons.encrypt.CipherUtil;
+import org.czh.interview.commons.encrypt.EncryptConstant;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
-import org.czh.interview.commons.validate.EqualsAssert;
-import org.czh.interview.commons.validate.FlagAssert;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESedeKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.Objects;
 
 /**
  * @author : czh
- * description : AES 是 DES 的高级替代
+ * description : 3DES 即3重DES，使用频率低，效率低
  * date : 2021-06-05
  * email 916419307@qq.com
  */
 @SuppressWarnings({"unused", "DuplicatedCode"})
-public final class AESUtil {
-
-    public static void main(String[] args) {
-        String key = SecretKeyUtil.matchReadByLast(EncryptConstant.getAES());
-        if (key == null) {
-            key = getKey(getSecretKey());
-            SecretKeyUtil.writeKey(EncryptConstant.getAES(), key);
-        }
-        System.out.println(key); // YHZcwVrucOTSQ+W2wXZhLA==
-        SecretKey secretKey = getSecretKey(key);
-
-        String src = "123456";
-        System.out.println(src); // 123456
-
-        String dst = encodeToString(src, secretKey);
-        String dst2 = encodeToString(src, secretKey);
-        System.out.println(dst); // dd538038f77f4aadb41f0e1b588d49dc
-        FlagAssert.isTrue(verify(src, dst, secretKey));
-        EqualsAssert.isEquals(dst, dst2);
-
-        String src2 = decodeToString(dst, secretKey);
-        String src3 = decodeToString(dst, secretKey);
-        System.out.println(src2); // 123456
-        EqualsAssert.isEquals(src, src2);
-        EqualsAssert.isEquals(src2, src3);
-    }
+public final class DES3Util {
 
     /*
         获取公钥
@@ -65,16 +42,19 @@ public final class AESUtil {
 
     public static SecretKey getSecretKey() {
         try {
-            SecretKey secretKey = KeyGenerator.getInstance(EncryptConstant.getAES()).generateKey();
-            return new SecretKeySpec(secretKey.getEncoded(), EncryptConstant.getAES());
+            SecretKey secretKey = KeyGenerator.getInstance(EncryptConstant.getDES3()).generateKey();
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(EncryptConstant.getDES3());
+            return factory.generateSecret(new DESedeKeySpec(secretKey.getEncoded()));
         } catch (NoSuchAlgorithmException e) {
             throw new CommonException("未知的加密方式");
+        } catch (InvalidKeyException | InvalidKeySpecException e) {
+            throw new CommonException("无效的公钥");
         }
     }
 
     public static SecretKey getSecretKey(@NotBlankTag String key) {
         byte[] keyBytes = keyStringToArray(key);
-        return new SecretKeySpec(keyBytes, EncryptConstant.getAES());
+        return new SecretKeySpec(keyBytes, EncryptConstant.getDES3());
     }
 
     /*
@@ -93,8 +73,8 @@ public final class AESUtil {
         return encode(srcStringToArray(src), secretKey);
     }
 
-    public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey secretKey) {
-        return CipherUtil.doFinalEncode(srcBytes, EncryptConstant.getAESCipher(), secretKey);
+    public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey key) {
+        return CipherUtil.doFinalEncode(srcBytes, EncryptConstant.getDES3Cipher(), key);
     }
 
     /*
@@ -114,7 +94,7 @@ public final class AESUtil {
     }
 
     public static byte[] decode(@NotEmptyTag byte[] dstBytes, @NotNullTag SecretKey secretKey) {
-        return CipherUtil.doFinalDecode(dstBytes, EncryptConstant.getAESCipher(), secretKey);
+        return CipherUtil.doFinalDecode(dstBytes, EncryptConstant.getDES3Cipher(), secretKey);
     }
 
     /*
@@ -173,15 +153,11 @@ public final class AESUtil {
 
     private static byte[] dstStringToArray(@NotBlankTag String dst) {
         EmptyAssert.isNotBlank(dst);
-        try {
-            return Hex.decodeHex(dst);
-        } catch (DecoderException e) {
-            throw new CommonException("无效的密文字符串");
-        }
+        return Base64Util.decode(dst);
     }
 
     private static String dstArrayToString(@NotEmptyTag byte[] dstBytes) {
         EmptyAssert.isNotEmpty(dstBytes);
-        return Hex.encodeHexString(dstBytes);
+        return Base64Util.encodeToString(dstBytes);
     }
 }
