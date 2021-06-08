@@ -5,13 +5,13 @@ import org.czh.interview.commons.annotations.tag.MinTag;
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
-import org.czh.interview.commons.encrypt.CipherUtil;
 import org.czh.interview.commons.encrypt.EncryptConstant;
 import org.czh.interview.commons.encrypt.symmetric.Base64Util;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
 import org.czh.interview.commons.validate.FlagAssert;
 
+import javax.crypto.Cipher;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -44,11 +44,10 @@ public final class RSAUtil {
      * @param keySize 密钥长度，必须是64的倍数，范围在512到65536之间，默认 1024
      * @return RSAPrivateKey 私钥Key；RSAPublicKey 公钥Key
      */
-    public static Map<String, String> queryKeyMap(@MinTag(1) int keySize) {
-        FlagAssert.isTrue(keySize > 0);
+    public static Map<String, String> queryKeyStringMap(@MinTag(1) int keySize) {
+        FlagAssert.isTrue(keySize >= 512 && keySize <= 65536 && keySize % 64 == 0);
 
-        Map<String, String> keyMap = new HashedMap<>(2);
-
+        Map<String, String> keyStringMap = new HashedMap<>(2);
         KeyPair keyPair;
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(EncryptConstant.getRSA());
@@ -57,16 +56,20 @@ public final class RSAUtil {
         } catch (NoSuchAlgorithmException e) {
             throw new CommonException("未知的加密方式");
         }
-        keyMap.put(EncryptConstant.getRSAPrivateKey(), keyArrayToString(keyPair.getPrivate().getEncoded()));
-        keyMap.put(EncryptConstant.getRSAPublicKey(), keyArrayToString(keyPair.getPublic().getEncoded()));
+        keyStringMap.put(EncryptConstant.getRSAPrivateKey(), getKeyString(keyPair.getPrivate()));
+        keyStringMap.put(EncryptConstant.getRSAPublicKey(), getKeyString(keyPair.getPublic()));
+        return keyStringMap;
+    }
 
-        return keyMap;
+    public static String getKeyString(@NotNullTag Key keyBean) {
+        EmptyAssert.isNotNull(keyBean);
+        return keyBytesToString(keyBean.getEncoded());
     }
 
     public static PrivateKey getPrivateKey(@NotBlankTag String privateKeyString) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance(EncryptConstant.getRSA());
-            PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyStringToArray(privateKeyString));
+            PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyStringToBytes(privateKeyString));
             return keyFactory.generatePrivate(pkcs8KeySpec);
         } catch (NoSuchAlgorithmException e) {
             throw new CommonException("未知的加密方式");
@@ -78,7 +81,7 @@ public final class RSAUtil {
     public static PublicKey getPublicKey(@NotBlankTag String publicKeyString) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance(EncryptConstant.getRSA());
-            X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyStringToArray(publicKeyString));
+            X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyStringToBytes(publicKeyString));
             return keyFactory.generatePublic(x509KeySpec);
         } catch (NoSuchAlgorithmException e) {
             throw new CommonException("未知的加密方式");
@@ -91,102 +94,120 @@ public final class RSAUtil {
         加密
      */
 
-    public static String encodeToString(@NotBlankTag String src, @NotNullTag Key key) {
-        return encodeToString(srcStringToArray(src), key);
+    public static String encodeToString(@NotBlankTag String srcString, @NotNullTag Key keyBean) {
+        return encodeToString(srcStringToBytes(srcString), keyBean);
     }
 
-    public static String encodeToString(@NotEmptyTag byte[] srcBytes, @NotNullTag Key key) {
-        return dstArrayToString(encode(srcBytes, key));
+    public static String encodeToString(@NotEmptyTag byte[] srcBytes, @NotNullTag Key keyBean) {
+        return dstBytesToString(encode(srcBytes, keyBean));
     }
 
-    public static byte[] encode(@NotBlankTag String src, @NotNullTag Key key) {
-        return encode(srcStringToArray(src), key);
+    public static byte[] encode(@NotBlankTag String srcString, @NotNullTag Key keyBean) {
+        return encode(srcStringToBytes(srcString), keyBean);
     }
 
-    public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag Key key) {
-        return CipherUtil.doFinalEncode(srcBytes, EncryptConstant.getRSACipher(), key);
+    public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag Key keyBean) {
+        EmptyAssert.isNotEmpty(srcBytes);
+        EmptyAssert.isNotNull(keyBean);
+
+        try {
+            Cipher cipher = Cipher.getInstance(EncryptConstant.getRSACipher());
+            cipher.init(Cipher.ENCRYPT_MODE, keyBean);
+            return cipher.doFinal(srcBytes);
+        } catch (Exception e) {
+            throw new CommonException("加密失败");
+        }
     }
 
     /*
         解密
      */
 
-    public static String decodeToString(@NotBlankTag String dst, @NotNullTag Key key) {
-        return decodeToString(dstStringToArray(dst), key);
+    public static String decodeToString(@NotBlankTag String dstString, @NotNullTag Key keyBean) {
+        return decodeToString(dstStringToBytes(dstString), keyBean);
     }
 
-    public static String decodeToString(@NotEmptyTag byte[] dstBytes, @NotNullTag Key key) {
-        return srcArrayToString(decode(dstBytes, key));
+    public static String decodeToString(@NotEmptyTag byte[] dstBytes, @NotNullTag Key keyBean) {
+        return srcBytesToString(decode(dstBytes, keyBean));
     }
 
-    public static byte[] decode(@NotBlankTag String dst, @NotNullTag Key key) {
-        return decode(dstStringToArray(dst), key);
+    public static byte[] decode(@NotBlankTag String dstString, @NotNullTag Key keyBean) {
+        return decode(dstStringToBytes(dstString), keyBean);
     }
 
-    public static byte[] decode(@NotEmptyTag byte[] dstBytes, @NotNullTag Key key) {
-        return CipherUtil.doFinalDecode(dstBytes, EncryptConstant.getRSACipher(), key);
+    public static byte[] decode(@NotEmptyTag byte[] dstBytes, @NotNullTag Key keyBean) {
+        EmptyAssert.isNotEmpty(dstBytes);
+        EmptyAssert.isNotNull(keyBean);
+
+        try {
+            Cipher cipher = Cipher.getInstance(EncryptConstant.getRSACipher());
+            cipher.init(Cipher.DECRYPT_MODE, keyBean);
+            return cipher.doFinal(dstBytes);
+        } catch (Exception e) {
+            throw new CommonException("解密失败");
+        }
     }
 
     /*
         校验
      */
-    public static boolean verify(@NotBlankTag String src,
-                                 @NotBlankTag String dst,
-                                 @NotNullTag Key key) {
-        EmptyAssert.isNotBlank(src);
-        return Objects.equals(src, decodeToString(dst, key));
+    public static boolean verify(@NotBlankTag String srcString,
+                                 @NotBlankTag String dstString,
+                                 @NotNullTag Key keyBean) {
+        EmptyAssert.isNotBlank(srcString);
+        return Objects.equals(srcString, decodeToString(dstString, keyBean));
     }
 
-    public static boolean verify(@NotBlankTag String src,
+    public static boolean verify(@NotBlankTag String srcString,
                                  @NotEmptyTag byte[] dstBytes,
-                                 @NotNullTag Key key) {
-        EmptyAssert.isNotBlank(src);
-        return Objects.equals(src, decodeToString(dstBytes, key));
+                                 @NotNullTag Key keyBean) {
+        EmptyAssert.isNotBlank(srcString);
+        return Objects.equals(srcString, decodeToString(dstBytes, keyBean));
     }
 
     public static boolean verify(@NotEmptyTag byte[] srcBytes,
-                                 @NotBlankTag String dst,
-                                 @NotNullTag Key key) {
+                                 @NotBlankTag String dstString,
+                                 @NotNullTag Key keyBean) {
         EmptyAssert.isNotEmpty(srcBytes);
-        return Arrays.equals(srcBytes, decode(dst, key));
+        return Arrays.equals(srcBytes, decode(dstString, keyBean));
     }
 
     public static boolean verify(@NotEmptyTag byte[] srcBytes,
                                  @NotEmptyTag byte[] dstBytes,
-                                 @NotNullTag Key key) {
+                                 @NotNullTag Key keyBean) {
         EmptyAssert.isNotEmpty(srcBytes);
-        return Arrays.equals(srcBytes, decode(dstBytes, key));
+        return Arrays.equals(srcBytes, decode(dstBytes, keyBean));
     }
 
     /*
         字节数组 与 字符串 互转
      */
-    private static byte[] keyStringToArray(@NotBlankTag String key) {
-        EmptyAssert.isNotBlank(key);
-        return Base64Util.decode(key);
+    private static byte[] keyStringToBytes(@NotBlankTag String keyString) {
+        EmptyAssert.isNotBlank(keyString);
+        return Base64Util.decode(keyString);
     }
 
-    private static String keyArrayToString(@NotEmptyTag byte[] keyBytes) {
+    private static String keyBytesToString(@NotEmptyTag byte[] keyBytes) {
         EmptyAssert.isNotEmpty(keyBytes);
         return Base64Util.encodeToString(keyBytes);
     }
 
-    private static byte[] srcStringToArray(@NotBlankTag String src) {
-        EmptyAssert.isNotBlank(src);
-        return src.getBytes();
+    private static byte[] srcStringToBytes(@NotBlankTag String srcString) {
+        EmptyAssert.isNotBlank(srcString);
+        return srcString.getBytes();
     }
 
-    private static String srcArrayToString(@NotEmptyTag byte[] srcBytes) {
+    private static String srcBytesToString(@NotEmptyTag byte[] srcBytes) {
         EmptyAssert.isNotEmpty(srcBytes);
         return new String(srcBytes);
     }
 
-    private static byte[] dstStringToArray(@NotBlankTag String dst) {
-        EmptyAssert.isNotBlank(dst);
-        return Base64Util.decode(dst);
+    private static byte[] dstStringToBytes(@NotBlankTag String dstString) {
+        EmptyAssert.isNotBlank(dstString);
+        return Base64Util.decode(dstString);
     }
 
-    private static String dstArrayToString(@NotEmptyTag byte[] dstBytes) {
+    private static String dstBytesToString(@NotEmptyTag byte[] dstBytes) {
         EmptyAssert.isNotEmpty(dstBytes);
         return Base64Util.encodeToString(dstBytes);
     }
