@@ -38,13 +38,10 @@ import java.util.Objects;
  */
 public final class RSAUtil {
 
-    /**
-     * 获取公钥、私钥
-     *
-     * @param keySize 密钥长度，必须是64的倍数，范围在512到65536之间，默认 1024
-     * @return RSAPrivateKey 私钥Key；RSAPublicKey 公钥Key
+    /*
+        生成 公钥
      */
-    public static Map<String, String> queryKeyStringMap(@MinTag(1) int keySize) {
+    public static Map<String, String> createKeyStringMap(@MinTag(1) int keySize) {
         FlagAssert.isTrue(keySize >= 512 && keySize <= 65536 && keySize % 64 == 0);
 
         Map<String, String> keyStringMap = new HashedMap<>(2);
@@ -61,6 +58,9 @@ public final class RSAUtil {
         return keyStringMap;
     }
 
+    /*
+        公钥 实体 与 字符串 互相转换
+     */
     public static String getKeyString(@NotNullTag Key keyBean) {
         EmptyAssert.isNotNull(keyBean);
         return keyBytesToString(keyBean.getEncoded());

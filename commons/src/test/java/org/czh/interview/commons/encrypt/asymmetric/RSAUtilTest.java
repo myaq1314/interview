@@ -19,97 +19,84 @@ import java.util.Map;
  */
 public class RSAUtilTest {
 
-    private String src;
+    private String srcString;
     private byte[] srcBytes;
     private Map<String, String> keyStringMap;
-    private PrivateKey privateKey;
-    private PublicKey publicKey;
-    private String publicKeySrc;
+    private PrivateKey privateKeyBean;
+    private PublicKey publicKeyBean;
+    private String publicKeyDstString;
     private byte[] publicKeySrcBytes;
-    private String privateKeySrc;
+    private String privateKeyDstString;
     private byte[] privateKeySrcBytes;
 
     @Before
     public void before() {
-        src = "123456";
-        srcBytes = src.getBytes();
-        this.keyStringMap = RSAUtil.queryKeyStringMap(512);
-        this.privateKey = RSAUtil.getPrivateKey(keyStringMap.get(EncryptConstant.getRSAPrivateKey()));
-        this.publicKey = RSAUtil.getPublicKey(keyStringMap.get(EncryptConstant.getRSAPublicKey()));
-        this.publicKeySrc = RSAUtil.encodeToString(src, this.publicKey);
-        this.publicKeySrcBytes = Base64Util.decode(this.publicKeySrc);
-        this.privateKeySrc = RSAUtil.encodeToString(src, this.privateKey);
-        this.privateKeySrcBytes = Base64Util.decode(this.privateKeySrc);
-    }
-
-    @Test
-    public void testQueryKeyMap() {
-        System.out.println(keyStringMap);
-
-        Map<String, String> keyMap1024 = RSAUtil.queryKeyStringMap(1024);
-        System.out.println(keyMap1024);
-
-        Map<String, String> keyMap2048 = RSAUtil.queryKeyStringMap(2048);
-        System.out.println(keyMap2048);
+        srcString = "123456";
+        srcBytes = srcString.getBytes();
+        this.keyStringMap = RSAUtil.createKeyStringMap(512);
+        this.privateKeyBean = RSAUtil.getPrivateKey(keyStringMap.get(EncryptConstant.getRSAPrivateKey()));
+        this.publicKeyBean = RSAUtil.getPublicKey(keyStringMap.get(EncryptConstant.getRSAPublicKey()));
+        this.publicKeyDstString = RSAUtil.encodeToString(this.srcString, this.publicKeyBean);
+        this.publicKeySrcBytes = Base64Util.decode(this.publicKeyDstString);
+        this.privateKeyDstString = RSAUtil.encodeToString(this.srcString, this.privateKeyBean);
+        this.privateKeySrcBytes = Base64Util.decode(this.privateKeyDstString);
     }
 
     @Test
     public void testGetKey() {
         String privateKeyString = this.keyStringMap.get(EncryptConstant.getRSAPrivateKey());
-        System.out.println(privateKeyString);
-        String privateKeyString2 = Base64Util.encodeToString(this.privateKey.getEncoded());
+        String privateKeyString2 = Base64Util.encodeToString(this.privateKeyBean.getEncoded());
         EqualsAssert.isEquals(privateKeyString, privateKeyString2);
 
         String publicKeyString = this.keyStringMap.get(EncryptConstant.getRSAPublicKey());
-        System.out.println(publicKeyString);
-        String publicKeyString2 = Base64Util.encodeToString(this.publicKey.getEncoded());
+        String publicKeyString2 = Base64Util.encodeToString(this.publicKeyBean.getEncoded());
         EqualsAssert.isEquals(publicKeyString, publicKeyString2);
     }
 
     @Test
     public void testEncodeAndDecode() {
-        String dst1 = RSAUtil.encodeToString(this.src, this.privateKey);
-        String src1 = RSAUtil.decodeToString(dst1, this.publicKey);
-        EqualsAssert.isEquals(this.src, src1);
+        String dst1 = RSAUtil.encodeToString(this.srcString, this.privateKeyBean);
+        String src1 = RSAUtil.decodeToString(dst1, this.publicKeyBean);
+        EqualsAssert.isEquals(this.srcString, src1);
 
-        String dst2 = RSAUtil.encodeToString(this.src, this.publicKey);
-        String src2 = RSAUtil.decodeToString(dst2, this.privateKey);
-        EqualsAssert.isEquals(this.src, src2);
+        String dst2 = RSAUtil.encodeToString(this.srcString, this.publicKeyBean);
+        String src2 = RSAUtil.decodeToString(dst2, this.privateKeyBean);
+        EqualsAssert.isEquals(this.srcString, src2);
 
-        String dst3 = RSAUtil.encodeToString(this.srcBytes, this.privateKey);
-        byte[] srcBytes3 = RSAUtil.decode(dst3, this.publicKey);
+        String dst3 = RSAUtil.encodeToString(this.srcBytes, this.privateKeyBean);
+        byte[] srcBytes3 = RSAUtil.decode(dst3, this.publicKeyBean);
         EqualsAssert.isEquals(this.srcBytes, srcBytes3);
 
-        String dst4 = RSAUtil.encodeToString(this.srcBytes, this.publicKey);
-        byte[] srcBytes4 = RSAUtil.decode(dst4, this.privateKey);
+        String dst4 = RSAUtil.encodeToString(this.srcBytes, this.publicKeyBean);
+        byte[] srcBytes4 = RSAUtil.decode(dst4, this.privateKeyBean);
         EqualsAssert.isEquals(this.srcBytes, srcBytes4);
 
-        byte[] dstBytes5 = RSAUtil.encode(this.src, this.privateKey);
-        String src5 = RSAUtil.decodeToString(dstBytes5, this.publicKey);
-        EqualsAssert.isEquals(this.src, src5);
+        byte[] dstBytes5 = RSAUtil.encode(this.srcString, this.privateKeyBean);
+        String src5 = RSAUtil.decodeToString(dstBytes5, this.publicKeyBean);
+        EqualsAssert.isEquals(this.srcString, src5);
 
-        byte[] dstBytes6 = RSAUtil.encode(this.src, this.publicKey);
-        String src6 = RSAUtil.decodeToString(dstBytes6, this.privateKey);
-        EqualsAssert.isEquals(this.src, src6);
+        byte[] dstBytes6 = RSAUtil.encode(this.srcString, this.publicKeyBean);
+        String src6 = RSAUtil.decodeToString(dstBytes6, this.privateKeyBean);
+        EqualsAssert.isEquals(this.srcString, src6);
 
-        byte[] dstBytes7 = RSAUtil.encode(this.srcBytes, this.privateKey);
-        byte[] srcBytes7 = RSAUtil.decode(dstBytes7, this.publicKey);
+        byte[] dstBytes7 = RSAUtil.encode(this.srcBytes, this.privateKeyBean);
+        byte[] srcBytes7 = RSAUtil.decode(dstBytes7, this.publicKeyBean);
         EqualsAssert.isEquals(this.srcBytes, srcBytes7);
 
-        byte[] dstBytes8 = RSAUtil.encode(this.srcBytes, this.publicKey);
-        byte[] srcBytes8 = RSAUtil.decode(dstBytes8, this.privateKey);
+        byte[] dstBytes8 = RSAUtil.encode(this.srcBytes, this.publicKeyBean);
+        byte[] srcBytes8 = RSAUtil.decode(dstBytes8, this.privateKeyBean);
         EqualsAssert.isEquals(this.srcBytes, srcBytes8);
     }
 
     @Test
     public void testVerify() {
-        FlagAssert.isTrue(RSAUtil.verify(this.src, this.privateKeySrc, this.publicKey));
-        FlagAssert.isTrue(RSAUtil.verify(this.src, this.publicKeySrc, this.privateKey));
-        FlagAssert.isTrue(RSAUtil.verify(this.src, this.privateKeySrcBytes, this.publicKey));
-        FlagAssert.isTrue(RSAUtil.verify(this.src, this.publicKeySrcBytes, this.privateKey));
-        FlagAssert.isTrue(RSAUtil.verify(this.srcBytes, this.privateKeySrc, this.publicKey));
-        FlagAssert.isTrue(RSAUtil.verify(this.srcBytes, this.publicKeySrc, this.privateKey));
-        FlagAssert.isTrue(RSAUtil.verify(this.srcBytes, this.privateKeySrcBytes, this.publicKey));
-        FlagAssert.isTrue(RSAUtil.verify(this.srcBytes, this.publicKeySrcBytes, this.privateKey));
+        FlagAssert.isTrue(RSAUtil.verify(this.srcString, this.privateKeyDstString, this.publicKeyBean));
+        FlagAssert.isTrue(RSAUtil.verify(this.srcString, this.publicKeyDstString, this.privateKeyBean));
+        FlagAssert.isTrue(RSAUtil.verify(this.srcString, this.privateKeySrcBytes, this.publicKeyBean));
+        FlagAssert.isTrue(RSAUtil.verify(this.srcString, this.publicKeySrcBytes, this.privateKeyBean));
+        FlagAssert.isTrue(RSAUtil.verify(this.srcBytes, this.privateKeyDstString, this.publicKeyBean));
+        FlagAssert.isTrue(RSAUtil.verify(this.srcBytes, this.publicKeyDstString, this.privateKeyBean));
+        FlagAssert.isTrue(RSAUtil.verify(this.srcBytes, this.privateKeySrcBytes, this.publicKeyBean));
+        FlagAssert.isTrue(RSAUtil.verify(this.srcBytes, this.publicKeySrcBytes, this.privateKeyBean));
     }
 }
