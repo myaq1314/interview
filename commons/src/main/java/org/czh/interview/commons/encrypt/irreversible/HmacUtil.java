@@ -10,10 +10,10 @@ import org.czh.interview.commons.validate.EmptyAssert;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Objects;
@@ -24,27 +24,17 @@ import java.util.Objects;
  * date : 2021-06-02
  * email 916419307@qq.com
  */
-@SuppressWarnings({"unused", "DuplicatedCode"})
 public final class HmacUtil {
 
     /*
-        获取 公钥
+        生成 公钥
      */
 
-    /**
-     * gmFd3/krxThqhsuL/4BfBOOEtO2NKibUY1fScMeRIAAuiLoHphZg9Pw3fMUsQHdy9rhP4X3WEC5EShh3p06P5w==
-     * 7F/+tIaFwfQigqxM1Ffu3mGG1/iX8OuTw5ttZgxIA87bbHBGLQz106XCzA/NP+fVafne97ktwV3lJktdlxGQ+g==
-     */
-    public static String getKey() {
-        return getKey(getSecretKey());
+    public static String createKeyString() {
+        return getKeyString(createKeyBean());
     }
 
-    public static String getKey(@NotNullTag SecretKey secretKey) {
-        EmptyAssert.isNotNull(secretKey);
-        return keyArrayToString(secretKey.getEncoded());
-    }
-
-    public static SecretKey getSecretKey() {
+    public static Key createKeyBean() {
         try {
             return KeyGenerator.getInstance(EncryptConstant.getHmacMD5()).generateKey();
         } catch (NoSuchAlgorithmException e) {
@@ -52,34 +42,42 @@ public final class HmacUtil {
         }
     }
 
-    public static SecretKey getSecretKey(@NotBlankTag String key) {
-        return new SecretKeySpec(keyStringToArray(key), EncryptConstant.getHmacMD5());
+    /*
+        公钥 实体 与 字符串 互相转换
+     */
+    public static String getKeyString(@NotNullTag Key keyBean) {
+        EmptyAssert.isNotNull(keyBean);
+        return keyBytesToString(keyBean.getEncoded());
+    }
+
+    public static Key getKeyBean(@NotBlankTag String key) {
+        return new SecretKeySpec(keyStringToBytes(key), EncryptConstant.getHmacMD5());
     }
 
     /*
         加密
      */
 
-    public static String encodeToString(@NotBlankTag String src, @NotNullTag SecretKey secretKey) {
-        return encodeToString(srcStringToArray(src), secretKey);
+    public static String encodeToString(@NotBlankTag String srcString, @NotNullTag Key keyBean) {
+        return encodeToString(srcStringToBytes(srcString), keyBean);
     }
 
-    public static String encodeToString(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey secretKey) {
-        return dstArrayToString(encode(srcBytes, secretKey));
+    public static String encodeToString(@NotEmptyTag byte[] srcBytes, @NotNullTag Key keyBean) {
+        return dstBytesToString(encode(srcBytes, keyBean));
     }
 
-    public static byte[] encode(@NotBlankTag String src, @NotNullTag SecretKey secretKey) {
-        EmptyAssert.isNotBlank(src);
-        return encode(srcStringToArray(src), secretKey);
+    public static byte[] encode(@NotBlankTag String srcString, @NotNullTag Key keyBean) {
+        EmptyAssert.isNotBlank(srcString);
+        return encode(srcStringToBytes(srcString), keyBean);
     }
 
-    public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey secretKey) {
+    public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag Key keyBean) {
         EmptyAssert.isNotEmpty(srcBytes);
-        EmptyAssert.isNotNull(secretKey);
+        EmptyAssert.isNotNull(keyBean);
 
         try {
             Mac mac = Mac.getInstance(EncryptConstant.getHmacMD5());
-            mac.init(secretKey);
+            mac.init(keyBean);
             return mac.doFinal(srcBytes);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("未知的加密算法");
@@ -92,52 +90,52 @@ public final class HmacUtil {
         校验
      */
 
-    public static boolean verify(@NotBlankTag String src,
-                                 @NotBlankTag String dst,
-                                 @NotNullTag SecretKey secretKey) {
-        EmptyAssert.isNotBlank(dst);
-        return Objects.equals(encodeToString(src, secretKey), dst);
+    public static boolean verify(@NotBlankTag String srcString,
+                                 @NotBlankTag String dstString,
+                                 @NotNullTag Key keyBean) {
+        EmptyAssert.isNotBlank(dstString);
+        return Objects.equals(encodeToString(srcString, keyBean), dstString);
     }
 
-    public static boolean verify(@NotBlankTag String src,
+    public static boolean verify(@NotBlankTag String srcString,
                                  @NotEmptyTag byte[] dstBytes,
-                                 @NotNullTag SecretKey secretKey) {
+                                 @NotNullTag Key keyBean) {
         EmptyAssert.isNotEmpty(dstBytes);
-        return Arrays.equals(encode(src, secretKey), dstBytes);
+        return Arrays.equals(encode(srcString, keyBean), dstBytes);
     }
 
     public static boolean verify(@NotEmptyTag byte[] srcBytes,
-                                 @NotBlankTag String dst,
-                                 @NotNullTag SecretKey secretKey) {
-        EmptyAssert.isNotBlank(dst);
-        return Objects.equals(encodeToString(srcBytes, secretKey), dst);
+                                 @NotBlankTag String dstString,
+                                 @NotNullTag Key keyBean) {
+        EmptyAssert.isNotBlank(dstString);
+        return Objects.equals(encodeToString(srcBytes, keyBean), dstString);
     }
 
     public static boolean verify(@NotEmptyTag byte[] srcBytes,
                                  @NotEmptyTag byte[] dstBytes,
-                                 @NotNullTag SecretKey secretKey) {
+                                 @NotNullTag Key keyBean) {
         EmptyAssert.isNotEmpty(dstBytes);
-        return Arrays.equals(encode(srcBytes, secretKey), dstBytes);
+        return Arrays.equals(encode(srcBytes, keyBean), dstBytes);
     }
 
     /*
         字节数组 与 字符串 互转
      */
-    private static byte[] keyStringToArray(@NotBlankTag String key) {
-        EmptyAssert.isNotBlank(key);
-        return Base64Util.decode(key);
+    private static byte[] keyStringToBytes(@NotBlankTag String keyString) {
+        EmptyAssert.isNotBlank(keyString);
+        return Base64Util.decode(keyString);
     }
 
-    private static String keyArrayToString(@NotEmptyTag byte[] keyBytes) {
+    private static String keyBytesToString(@NotEmptyTag byte[] keyBytes) {
         EmptyAssert.isNotEmpty(keyBytes);
         return Base64Util.encodeToString(keyBytes);
     }
 
-    private static String dstArrayToString(@NotEmptyTag byte[] dstBytes) {
+    private static String dstBytesToString(@NotEmptyTag byte[] dstBytes) {
         return new BigInteger(dstBytes).toString(16);
     }
 
-    private static byte[] srcStringToArray(@NotBlankTag String src) {
-        return src.getBytes();
+    private static byte[] srcStringToBytes(@NotBlankTag String srcString) {
+        return srcString.getBytes();
     }
 }

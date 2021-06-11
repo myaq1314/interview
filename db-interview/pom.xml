@@ -15,16 +15,9 @@
 
     <modules>
         <module>elasticsearch-interview</module>
-        <module>elasticsearch-spring-interview</module>
         <module>hbase-interview</module>
-        <module>hbase-spring-interview</module>
-        <module>jdbc-interview</module>
-        <module>jdbc-spring-interview</module>
-        <module>mybatis-interview</module>
-        <module>mybatis-spring-interview</module>
         <module>mysql-interview</module>
         <module>redis-interview</module>
-        <module>redis-spring-interview</module>
     </modules>
 
     <properties>

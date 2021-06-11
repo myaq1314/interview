@@ -15,7 +15,6 @@
 
     <modules>
         <module>dubbo-interview</module>
-        <module>dubbo-spring-interview</module>
         <module>spring-boot-interview</module>
         <module>spring-cloud-interview</module>
         <module>spring-interview</module>

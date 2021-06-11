@@ -4,7 +4,7 @@ import org.czh.interview.commons.validate.EqualsAssert;
 import org.czh.interview.commons.validate.FlagAssert;
 import org.junit.Test;
 
-import javax.crypto.SecretKey;
+import java.security.Key;
 
 /**
  * @author : czh
@@ -14,19 +14,26 @@ import javax.crypto.SecretKey;
  */
 public class HmacUtilTest {
 
+    private String srcString;
+    private byte[] srcBytes;
+    private String keyString;
+    private Key keyBean;
+    private String dstString;
+    private byte[] dstBytes;
+
     @Test
     public void test() {
-        String key = HmacUtil.getKey(HmacUtil.getSecretKey());
+        String key = HmacUtil.getKeyString(HmacUtil.createKeyBean());
         System.out.println(key); // qRSubWiifx9/q/HQffdOGE1jljRe/1BbkEdxEZYOztucPApL1dswCDArlaLo2K5hQg5L3P++iq9W37ekimsYCQ==
-        SecretKey secretKey = HmacUtil.getSecretKey(key);
+        Key keyBean = HmacUtil.getKeyBean(key);
 
         String src = "123456";
         System.out.println(src); // 123456
 
-        String dst = HmacUtil.encodeToString(src, secretKey);
-        String dst2 = HmacUtil.encodeToString(src, secretKey);
+        String dst = HmacUtil.encodeToString(src, keyBean);
+        String dst2 = HmacUtil.encodeToString(src, keyBean);
         System.out.println(dst); // 1b589c3a31995afd8aa74d21cfa6287e
-        FlagAssert.isTrue(HmacUtil.verify(src, dst, secretKey));
+        FlagAssert.isTrue(HmacUtil.verify(src, dst, keyBean));
         EqualsAssert.isEquals(dst, dst2);
     }
 
