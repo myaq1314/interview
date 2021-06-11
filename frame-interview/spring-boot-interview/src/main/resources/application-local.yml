@@ -1,0 +1,6 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 0
+    uri-encoding: utf-8
