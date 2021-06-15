@@ -3,12 +3,12 @@ package org.czh.interview.commons.encrypt.symmetric;
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
-import org.czh.interview.commons.encrypt.CipherUtil;
 import org.czh.interview.commons.encrypt.EncryptConstant;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.utils.RandomUtil;
 import org.czh.interview.commons.validate.EmptyAssert;
 
+import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -104,9 +104,19 @@ public final class PBEUtil {
     }
 
     public static byte[] encode(@NotEmptyTag byte[] srcBytes,
-                                @NotNullTag SecretKey secretKey,
+                                @NotNullTag SecretKey key,
                                 @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        return CipherUtil.doFinalEncode(srcBytes, EncryptConstant.getPBECipher(), secretKey, algParamSpec);
+        EmptyAssert.isNotEmpty(srcBytes);
+        EmptyAssert.isNotNull(key);
+        EmptyAssert.isNotNull(algParamSpec);
+
+        try {
+            Cipher cipher = Cipher.getInstance(EncryptConstant.getPBECipher());
+            cipher.init(Cipher.ENCRYPT_MODE, key, algParamSpec);
+            return cipher.doFinal(srcBytes);
+        } catch (Exception e) {
+            throw new CommonException("口令加密失败");
+        }
     }
 
     /*
@@ -132,9 +142,19 @@ public final class PBEUtil {
     }
 
     public static byte[] decode(@NotEmptyTag byte[] dstBytes,
-                                @NotNullTag SecretKey secretKey,
+                                @NotNullTag SecretKey key,
                                 @NotNullTag AlgorithmParameterSpec algParamSpec) {
-        return CipherUtil.doFinalDecode(dstBytes, EncryptConstant.getPBECipher(), secretKey, algParamSpec);
+        EmptyAssert.isNotEmpty(dstBytes);
+        EmptyAssert.isNotNull(key);
+        EmptyAssert.isNotNull(algParamSpec);
+
+        try {
+            Cipher cipher = Cipher.getInstance(EncryptConstant.getPBECipher());
+            cipher.init(Cipher.DECRYPT_MODE, key, algParamSpec);
+            return cipher.doFinal(dstBytes);
+        } catch (Exception e) {
+            throw new CommonException("口令解密失败");
+        }
     }
 
     /*

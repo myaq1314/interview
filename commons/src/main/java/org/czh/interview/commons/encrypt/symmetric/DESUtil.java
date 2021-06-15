@@ -3,11 +3,11 @@ package org.czh.interview.commons.encrypt.symmetric;
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
-import org.czh.interview.commons.encrypt.CipherUtil;
 import org.czh.interview.commons.encrypt.EncryptConstant;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
@@ -73,8 +73,17 @@ public final class DESUtil {
         return encode(srcStringToArray(src), secretKey);
     }
 
-    public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey secretKey) {
-        return CipherUtil.doFinalEncode(srcBytes, EncryptConstant.getDESCipher(), secretKey);
+    public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey key) {
+        EmptyAssert.isNotEmpty(srcBytes);
+        EmptyAssert.isNotNull(key);
+
+        try {
+            Cipher cipher = Cipher.getInstance(EncryptConstant.getDESCipher());
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            return cipher.doFinal(srcBytes);
+        } catch (Exception e) {
+            throw new CommonException("加密失败");
+        }
     }
 
     /*
@@ -93,8 +102,17 @@ public final class DESUtil {
         return decode(dstStringToArray(dst), secretKey);
     }
 
-    public static byte[] decode(@NotEmptyTag byte[] dstBytes, @NotNullTag SecretKey secretKey) {
-        return CipherUtil.doFinalDecode(dstBytes, EncryptConstant.getDESCipher(), secretKey);
+    public static byte[] decode(@NotEmptyTag byte[] dstBytes, @NotNullTag SecretKey key) {
+        EmptyAssert.isNotEmpty(dstBytes);
+        EmptyAssert.isNotNull(key);
+
+        try {
+            Cipher cipher = Cipher.getInstance(EncryptConstant.getDESCipher());
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            return cipher.doFinal(dstBytes);
+        } catch (Exception e) {
+            throw new CommonException("解密失败");
+        }
     }
 
     /*

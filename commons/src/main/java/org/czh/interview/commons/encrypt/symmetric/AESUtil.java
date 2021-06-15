@@ -5,11 +5,11 @@ import org.apache.commons.codec.binary.Hex;
 import org.czh.interview.commons.annotations.tag.NotBlankTag;
 import org.czh.interview.commons.annotations.tag.NotEmptyTag;
 import org.czh.interview.commons.annotations.tag.NotNullTag;
-import org.czh.interview.commons.encrypt.CipherUtil;
 import org.czh.interview.commons.encrypt.EncryptConstant;
 import org.czh.interview.commons.exceptions.CommonException;
 import org.czh.interview.commons.validate.EmptyAssert;
 
+import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -69,7 +69,16 @@ public final class AESUtil {
     }
 
     public static byte[] encode(@NotEmptyTag byte[] srcBytes, @NotNullTag SecretKey secretKey) {
-        return CipherUtil.doFinalEncode(srcBytes, EncryptConstant.getAESCipher(), secretKey);
+        EmptyAssert.isNotEmpty(srcBytes);
+        EmptyAssert.isNotNull(secretKey);
+
+        try {
+            Cipher cipher = Cipher.getInstance(EncryptConstant.getAESCipher());
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            return cipher.doFinal(srcBytes);
+        } catch (Exception e) {
+            throw new CommonException("加密失败");
+        }
     }
 
     /*
@@ -89,7 +98,16 @@ public final class AESUtil {
     }
 
     public static byte[] decode(@NotEmptyTag byte[] dstBytes, @NotNullTag SecretKey secretKey) {
-        return CipherUtil.doFinalDecode(dstBytes, EncryptConstant.getAESCipher(), secretKey);
+        EmptyAssert.isNotEmpty(dstBytes);
+        EmptyAssert.isNotNull(secretKey);
+
+        try {
+            Cipher cipher = Cipher.getInstance(EncryptConstant.getAESCipher());
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            return cipher.doFinal(dstBytes);
+        } catch (Exception e) {
+            throw new CommonException("解密失败");
+        }
     }
 
     /*
