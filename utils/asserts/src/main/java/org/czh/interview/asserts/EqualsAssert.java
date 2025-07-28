@@ -4,10 +4,10 @@ import org.czh.interview.exceptions.CommonException;
 import org.czh.interview.validate.EqualsValidate;
 
 /**
- * @author : czh
- * description :
- * date : 2019/10/13
- * email chuzhihao@zghits.com
+ * @author : CZH
+ * description : 相等 断言
+ * datetime : 2025/7/25
+ * email : 916419307@qq.com
  */
 @SuppressWarnings("unused")
 public final class EqualsAssert {

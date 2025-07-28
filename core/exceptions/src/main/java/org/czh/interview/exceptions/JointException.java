@@ -3,10 +3,10 @@ package org.czh.interview.exceptions;
 import org.czh.interview.enums.IDictEnum;
 
 /**
- * @author : ZGH
+ * @author : CZH
  * description : 拼装异常
  * datetime : 2025/7/25
- * email : zgh@zghits.com
+ * email : 916419307@qq.com
  */
 @SuppressWarnings("unused")
 public class JointException extends CommonException {

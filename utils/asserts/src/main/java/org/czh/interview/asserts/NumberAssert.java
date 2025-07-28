@@ -6,10 +6,10 @@ import org.czh.interview.exceptions.CommonException;
 import org.czh.interview.validate.NumberValidate;
 
 /**
- * @author : czh
- * description : 数字 断言
- * date : 2019/10/13
- * email chuzhihao@zghits.com
+ * @author : CZH
+ * description : 数值 断言
+ * datetime : 2025/7/25
+ * email : 916419307@qq.com
  */
 @SuppressWarnings("unused")
 public final class NumberAssert {

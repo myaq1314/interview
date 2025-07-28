@@ -6,10 +6,10 @@ import org.czh.interview.exceptions.CommonException;
 import org.czh.interview.validate.FlagValidate;
 
 /**
- * @author : czh
+ * @author : CZH
  * description : 布尔值 断言
- * date : 2019/10/13
- * email chuzhihao@zghits.com
+ * datetime : 2025/7/25
+ * email : 916419307@qq.com
  */
 @SuppressWarnings("unused")
 public final class FlagAssert {

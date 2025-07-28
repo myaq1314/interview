@@ -9,10 +9,10 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
- * @author : czh
+ * @author : CZH
  * description : 空 断言
- * date : 2019/10/13
- * email chuzhihao@zghits.com
+ * datetime : 2025/7/25
+ * email : 916419307@qq.com
  */
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public final class EmptyAssert {
