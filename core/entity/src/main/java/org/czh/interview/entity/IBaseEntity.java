@@ -1,0 +1,12 @@
+package org.czh.interview.entity;
+
+/**
+ * @author : CZH
+ * description : 实体 顶层基类
+ * datetime : 2025/7/25
+ * email : 916419307@qq.com
+ */
+@SuppressWarnings("unused")
+public interface IBaseEntity extends java.io.Serializable {
+
+}
