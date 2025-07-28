@@ -20,6 +20,7 @@
         <io.swagger.version>1.6.2</io.swagger.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
         <juniversalchardet.version>2.4.0</juniversalchardet.version>
+        <spring-boot.version>2.7.12</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -99,6 +100,11 @@
                 <groupId>com.github.albfernandez</groupId>
                 <artifactId>juniversalchardet</artifactId>
                 <version>${juniversalchardet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
