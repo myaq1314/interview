@@ -20,6 +20,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.czh.interview</groupId>
             <artifactId>validate</artifactId>
         </dependency>

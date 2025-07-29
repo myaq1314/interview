@@ -15,5 +15,6 @@
     <modules>
         <module>validate</module>
         <module>asserts</module>
+        <module>arithmetic</module>
     </modules>
 </project>
