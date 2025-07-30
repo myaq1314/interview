@@ -16,6 +16,7 @@
         <module>enums</module>
         <module>entity</module>
         <module>exceptions</module>
+        <module>jvm</module>
     </modules>
 
 </project>
